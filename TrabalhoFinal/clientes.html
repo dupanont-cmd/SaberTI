@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes | EMP System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --roxo-escuro: #4C1D95;
+            --roxo: #6D28D9;
+            --roxo-claro: #8B5CF6;
+            --roxo-tint: #F5F1FE;
+            --roxo-borda: #DCD1F7;
+            --texto: #2E1A47;
+            --texto-suave: #6B5C82;
+            --branco: #FFFFFF;
+            --erro: #D6335A;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--roxo-tint);
+            color: var(--texto);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Menu lateral: mesmos estilos e itens presentes em menu.html. */
+        .menu-lateral {
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            width: 290px;
+            height: 100vh;
+            padding: 28px 18px 22px;
+            background: var(--branco);
+            border-right: 1px solid var(--roxo-borda);
+            box-shadow: 12px 0 35px -28px rgba(76, 29, 149, .45);
+        }
+
+        .marca {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px 28px;
+            border-bottom: 1px solid var(--roxo-borda);
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            padding: 5px;
+            flex-shrink: 0;
+            border: 1px solid var(--roxo-borda);
+            border-radius: 50%;
+            background: var(--branco);
+            box-shadow: 0 6px 16px -8px rgba(109, 40, 217, .45);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .nome-sistema {
+            margin: 0;
+            color: var(--roxo-escuro);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .texto-menu {
+            margin: 26px 10px 10px;
+            color: var(--texto-suave);
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .07em;
+            text-transform: uppercase;
+        }
+
+        .opcoes-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .opcao-menu {
+            display: block;
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 10px;
+            color: var(--texto);
+            font-size: .9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background .15s ease, color .15s ease;
+        }
+
+        .opcao-menu:hover,
+        .opcao-menu:focus,
+        .opcao-menu.ativa {
+            outline: none;
+            background: var(--roxo-tint);
+            color: var(--roxo-escuro);
+        }
+
+        .rodape-menu {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--roxo-borda);
+        }
+
+        .botao-sair {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--roxo-borda);
+            border-radius: 10px;
+            background: var(--branco);
+            color: var(--roxo);
+            font-family: 'Inter', sans-serif;
+            font-size: .88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .15s ease, color .15s ease;
+        }
+
+        .botao-sair:hover {
+            background: var(--roxo);
+            color: var(--branco);
+        }
+
+        /* Blocos dropdown mantidos do menu.html. */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            font-family: Arial, sans-serif;
+        }
+
+        .dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .arrow {
+            display: inline-block;
+            padding: 3px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+            transition: transform .3s ease;
+        }
+
+        .dropdown.active .arrow {
+            transform: rotate(-135deg);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            min-width: 160px;
+            margin-top: 5px;
+            border-radius: 5px;
+            background-color: #f1f1f1;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, .2);
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 12px 16px;
+            color: black;
+            text-decoration: none;
+        }
+
+        .dropdown-content a:hover {
+            border-radius: 5px;
+            background-color: #ddd;
+        }
+
+        /* Área exibida ao lado do menu. */
+        .conteudo {
+            min-height: 100vh;
+            margin-left: 290px;
+            padding: 42px;
+        }
+
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            color: var(--roxo-escuro);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.8rem;
+        }
+
+        .subtitulo {
+            margin: 0;
+            color: var(--texto-suave);
+        }
+
+        .botao-novo {
+            padding: 13px 18px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--roxo);
+            color: var(--branco);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .botao-novo:hover {
+            background: var(--roxo-escuro);
+        }
+
+        .filtros {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .campo-busca {
+            position: relative;
+            flex: 1 1 300px;
+        }
+
+        .lupa {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--texto-suave);
+            pointer-events: none;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 44px;
+            border: 1.5px solid var(--roxo-borda);
+            border-radius: 10px;
+            background: var(--branco);
+            color: var(--texto);
+            font: inherit;
+            outline: none;
+        }
+
+        input {
+            padding: 0 14px 0 42px;
+        }
+
+        select {
+            width: auto;
+            min-width: 275px;
+            padding: 0 14px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--roxo-claro);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, .18);
+        }
+
+        .cartao-tabela {
+            overflow: hidden;
+            background: var(--branco);
+            border: 1px solid var(--roxo-borda);
+            border-radius: 14px;
+            box-shadow: 0 15px 35px -30px rgba(76, 29, 149, .45);
+        }
+
+        .tabela-responsiva {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 620px;
+        }
+
+        th,
+        td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--roxo-tint);
+        }
+
+        th {
+            background: #FBFAFE;
+            color: var(--texto-suave);
+            font-size: .75rem;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: .9rem;
+        }
+
+        tbody tr:hover {
+            background: #FCFBFF;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 8px;
+        }
+
+        .botao-acao {
+            padding: 8px 11px;
+            border: 1px solid var(--roxo-borda);
+            border-radius: 8px;
+            background: var(--branco);
+            color: var(--roxo);
+            font: 600 .8rem 'Inter', sans-serif;
+            cursor: pointer;
+        }
+
+        .botao-acao:hover {
+            background: var(--roxo-tint);
+        }
+
+        .botao-excluir {
+            border-color: #F3BDCC;
+            color: var(--erro);
+        }
+
+        .botao-excluir:hover {
+            background: #FDF0F3;
+        }
+
+        .mensagem {
+            margin: 0;
+            padding: 26px 20px;
+            color: var(--texto-suave);
+            text-align: center;
+        }
+
+        .mensagem.erro {
+            color: var(--erro);
+        }
+
+        @media (max-width:650px) {
+            .menu-lateral {
+                position: static;
+                width: 100%;
+                height: auto;
+                min-height: auto;
+            }
+
+            .rodape-menu {
+                margin-top: 24px;
+            }
+
+            .conteudo {
+                margin-left: 0;
+                padding: 28px 18px;
+            }
+
+            .cabecalho {
+                flex-direction: column;
+            }
+
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="menu-lateral">
+        <div class="marca">
+            <div class="logo"><img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiz6hjQ62svFZZKuzyxGbxIxeVa0AbIXk6BHW9EP5j-g&s=10"
+                    alt="Logo da empresa"></div>
+            <p class="nome-sistema">EMP System</p>
+        </div>
+        <p class="texto-menu">Menu principal</p>
+        <nav class="opcoes-menu" aria-label="Menu principal">
+            <a class="opcao-menu ativa" href="clientes.html">Cadastro de Clientes</a>
+            <a class="opcao-menu" href="categorias-produto.html">Cadastro de Categorias de Produto</a>
+            <a class="opcao-menu" href="produtos.html">Cadastro de Produtos</a>
+            <a class="opcao-menu" href="orcamentos.html">Tela de Orçamentos</a>
+        </nav>
+
+        <div class="rodape-menu"><button class="botao-sair" id="botaoSair" type="button">Sign out</button></div>
+    </aside>
+
+    <main class="conteudo">
+        <div class="cabecalho">
+            <div>
+                <h1>Clientes</h1>
+                <p class="subtitulo">Consulte e gerencie os clientes cadastrados.</p>
+            </div>
+            <a class="botao-novo" href="cadastro-cliente.html">+ Novo cliente</a>
+        </div>
+        <section class="filtros" aria-label="Filtros de clientes">
+            <div class="campo-busca"><span class="lupa" aria-hidden="true">⌕</span><input id="campoBusca" type="search"
+                    placeholder="Pesquisar cliente pelo nome" aria-label="Pesquisar cliente pelo nome"></div>
+            <select id="seletorOrdem" aria-label="Ordenar clientes">
+                <option value="desc">Mais recentes primeiro</option>
+                <option value="asc">Mais antigos primeiro</option>
+            </select>
+        </section>
+        <section class="cartao-tabela" aria-live="polite">
+            <div class="tabela-responsiva">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo de Cliente</th>
+                            <th>CPF / CNPJ</th>
+                            <th>Data de cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaClientes">
+                        <tr>
+                            <td class="mensagem" colspan="5">Carregando clientes...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="clientes.js"></script>
+</body>
+
+</html>
