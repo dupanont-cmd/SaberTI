@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panont's Burguer</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: Arial, sans-serif; color: #56200c; background: linear-gradient(135deg, #ffe2b5, #ffb56b); }
+    .pagina { width: min(1120px, 100%); margin: auto; padding: 32px 24px; }
+    .cabecalho { display: flex; justify-content: center; align-items: center; gap: 14px; margin-bottom: 26px; }
+    .logo { width: 72px; height: 72px; padding: 10px; background-color: #ffd166; border-radius: 50%; }
+    h1 { margin: 0; font-size: 30px; color: #772d12; }
+    .cabecalho p { margin: 5px 0 0; color: #9e451f; }
+    h2 { margin: 0 0 16px; font-size: 20px; color: #772d12; }
+    .layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; }
+    .menu, .carrinho { padding: 24px; background-color: #fffaf3; border-radius: 20px; box-shadow: 0 12px 28px rgba(111, 48, 10, 0.2); }
+    .grade-produtos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .produto { overflow: hidden; background-color: white; border: 2px solid #f6dbc0; border-radius: 14px; transition: transform 0.2s, border-color 0.2s; }
+    .produto:hover { transform: translateY(-3px); border-color: #e78b4d; }
+    .produto:has(input:checked) { border-color: #c64b17; }
+    .produto img { display: block; width: 100%; height: 125px; object-fit: cover; }
+    .produto label { display: block; padding: 12px; cursor: pointer; }
+    .produto strong { display: block; margin-bottom: 5px; }
+    .preco { color: #b84b1d; font-weight: bold; }
+    .secao-bebidas { margin-top: 24px; padding-top: 22px; border-top: 2px dashed #f0c18c; }
+    .bebidas { display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-items: center; padding: 14px; background-color: #fff1df; border-radius: 14px; }
+    .bebidas img { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; }
+    .opcoes label, .entrega label { display: block; margin: 9px 0; cursor: pointer; }
+    .opcoes small { color: #9e451f; }
+    .entrega { margin-top: 24px; padding: 16px; background-color: #fff1df; border-radius: 12px; }
+    .entrega p { margin: 0 0 8px; font-weight: bold; }
+    .carrinho { position: sticky; top: 20px; }
+    .carrinho h2 { padding-bottom: 12px; border-bottom: 2px solid #ffd166; }
+    #itens-carrinho { min-height: 110px; }
+    .item-carrinho { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f6dbc0; }
+    .vazio { color: #9e451f; }
+    .total { margin-top: 18px; padding: 14px; text-align: center; font-size: 21px; font-weight: bold; color: #772d12; background-color: #ffd166; border-radius: 10px; }
+    button { width: 100%; margin-top: 20px; padding: 13px; color: white; font-size: 16px; font-weight: bold; background-color: #c64b17; border: none; border-radius: 10px; cursor: pointer; }
+    button:hover { background-color: #922f0d; }
+    @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } .carrinho { position: static; } }
+    @media (max-width: 470px) { .pagina { padding: 20px 14px; } .menu, .carrinho { padding: 18px; } .grade-produtos, .bebidas { grid-template-columns: 1fr; } .bebidas img { height: 150px; } }
+  </style>
+</head>
+<body>
+  <main class="pagina">
+    <header class="cabecalho">
+      <img class="logo" src="https://cdn-icons-png.flaticon.com/512/2389/2389456.png" alt="Logo de hambúrguer">
+      <div><h1>Panont's Burguer</h1><p>Monte seu pedido</p></div>
+    </header>
+
+    <div class="layout">
+      <section class="menu">
+        <h2>Lanches</h2>
+        <div class="grade-produtos">
+          <article class="produto"><img src="https://images.unsplash.com/photo-1612392062791-2f0d06a6b11b?auto=format&fit=crop&w=500&q=80" alt="Cachorro-quente"><label><input type="checkbox" class="produto-selecionado" value="12" data-nome="Cachorro-quente"> <strong>Cachorro-quente</strong><span class="preco">R$ 12,00</span></label></article>
+          <article class="produto"><img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80" alt="Bauru simples"><label><input type="checkbox" class="produto-selecionado" value="13" data-nome="Bauru simples"> <strong>Bauru simples</strong><span class="preco">R$ 13,00</span></label></article>
+          <article class="produto"><img src="https://images.unsplash.com/photo-1550507992-eb63ffee0847?auto=format&fit=crop&w=500&q=80" alt="Bauru com ovo"><label><input type="checkbox" class="produto-selecionado" value="15" data-nome="Bauru com ovo"> <strong>Bauru com ovo</strong><span class="preco">R$ 15,00</span></label></article>
+          <article class="produto"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80" alt="Hambúrguer"><label><input type="checkbox" class="produto-selecionado" value="12" data-nome="Hambúrguer"> <strong>Hambúrguer</strong><span class="preco">R$ 12,00</span></label></article>
+          <article class="produto"><img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?auto=format&fit=crop&w=500&q=80" alt="Cheeseburguer"><label><input type="checkbox" class="produto-selecionado" value="13" data-nome="Cheeseburguer"> <strong>Cheeseburguer</strong><span class="preco">R$ 13,00</span></label></article>
+        </div>
+
+        <section class="secao-bebidas">
+          <h2>Refrigerantes — R$ 5,00</h2>
+          <div class="bebidas">
+            <img src="https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=500&q=80" alt="Copo de refrigerante">
+            <div class="opcoes">
+              <strong>Escolha um refrigerante:</strong>
+              <label><input type="radio" name="refrigerante" value="Coca-Cola"> Coca-Cola</label>
+              <label><input type="radio" name="refrigerante" value="Fanta"> Fanta</label>
+              <label><input type="radio" name="refrigerante" value="Guaraná"> Guaraná</label>
+              <small>Escolha o tipo de copo:</small>
+              <label><input type="radio" name="copo" value="com gelo e limão"> Com gelo e limão</label>
+              <label><input type="radio" name="copo" value="sem limão"> Com gelo, sem limão</label>
+              <label><input type="radio" name="copo" value="apenas o copo" checked> Apenas o copo</label>
+            </div>
+          </div>
+        </section>
+
+        <section class="entrega">
+          <p>Deseja embalagem para entrega?</p>
+          <label><input type="radio" name="entrega" value="sim"> Sim (+ R$ 4,00)</label>
+          <label><input type="radio" name="entrega" value="nao" checked> Não</label>
+        </section>
+        <button onclick="atualizarCarrinho()">Atualizar carrinho</button>
+      </section>
+
+      <aside class="carrinho">
+        <h2>Seu carrinho</h2>
+        <div id="itens-carrinho"><p class="vazio">Nenhum item selecionado.</p></div>
+        <div id="total" class="total">Total: R$ 0,00</div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    function formatarPreco(valor) {
+      return "R$ " + valor.toFixed(2).replace(".", ",");
+    }
+
+    function adicionarItem(nome, valor) {
+      const carrinho = document.getElementById("itens-carrinho");
+      carrinho.innerHTML += '<div class="item-carrinho"><span>' + nome + '</span><strong>' + formatarPreco(valor) + '</strong></div>';
+    }
+
+    function atualizarCarrinho() {
+      let total = 0;
+      const carrinho = document.getElementById("itens-carrinho");
+      const produtosMarcados = document.querySelectorAll(".produto-selecionado:checked");
+      const refrigerante = document.querySelector('input[name="refrigerante"]:checked');
+      const copo = document.querySelector('input[name="copo"]:checked');
+      const entrega = document.querySelector('input[name="entrega"]:checked');
+      carrinho.innerHTML = "";
+
+      for (let produto of produtosMarcados) {
+        const valor = Number(produto.value);
+        total += valor;
+        adicionarItem(produto.dataset.nome, valor);
+      }
+
+      if (refrigerante) {
+        total += 5;
+        adicionarItem(refrigerante.value + " (" + copo.value + ")", 5);
+      }
+
+      if (entrega.value === "sim") {
+        total += 4;
+        adicionarItem("Embalagem para entrega", 4);
+      }
+
+      if (total === 0) carrinho.innerHTML = '<p class="vazio">Nenhum item selecionado.</p>';
+      document.getElementById("total").innerHTML = "Total: " + formatarPreco(total);
+    }
+
+    document.querySelectorAll("input").forEach(function (campo) {
+      campo.addEventListener("change", atualizarCarrinho);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+body{ 
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: antiquewhite;
+       
+    }
+    h1{
+        color: rgb(187, 144, 26);
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 50px;
+        border-bottom: 10px;
+        margin:10px;
+    }
+    p{
+        font-size: 25px;
+        font-family:Georgia, 'Times New Roman', Times, serif ;
+    }
+    button{
+        color: rgb(158, 93, 70);
+        font-size: larger;
+        border-radius: 10px;
+        cursor: pointer;
+        padding: 20px 180px;
+        font-family:Georgia, 'Times New Roman', Times, serif;
+        transition: transform 0.3s ease;
+
+    }
+    button:hover {
+    transform: scale(1.1);
+    background-color: rgb(248, 228, 201);
+    color: black;
+}

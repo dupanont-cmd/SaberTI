@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <label for="idade">Idade: </label>
+    <p><input id="idade" type="number"></p>
+    <button id="botao">Verificar Maioridade</button>
+    <p id="media"></p>
+    <p id="resultado"></p>
+    <script>
+        let idade = document.getElementById("idade");
+        let botao = document.getElementById("botao");
+        let resultado = document.getElementById("resultado");
+
+        botao.addEventListener("click", function () {
+            if (idade.value > 17) {
+                resultado.innerText = "Maior de idade.";
+            } else {
+                resultado.innerText = "Menor de idade";
+            }
+        });
+
+    </script>
+</body>
+
+</html>

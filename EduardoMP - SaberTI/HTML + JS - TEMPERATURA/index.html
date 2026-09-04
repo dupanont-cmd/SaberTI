@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=], initial-scale=1.0">
+     <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <h1>CONVERSOR DE TEMPERATURA</h1>
+        <label for="temp">Temperatura em Celsius: </label>
+    <p><input id="temp" type="number"></p>
+    <button id="botao">CONVERTER</button>
+    <p id="resultado"></p>
+    <script>
+        let temp = document.getElementById("temp");
+        let botao = document.getElementById("botao");
+        let resultado = document.getElementById("resultado");
+
+        botao.addEventListener("click",function() {
+            let temp2 = Number(temp.value) * 1.8 + 32;
+            resultado.innerText = "TEMPERATURA EM FARENHEIT: " + temp2;
+    })
+    </script>
+</body>
+</html>

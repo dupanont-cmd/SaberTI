@@ -1,0 +1,28 @@
+<!-- pagina1.html -->
+<input type="text" id="novaOpcao" placeholder="Digite uma fruta...">
+<button onclick="adicionarOpcao()">Adicionar Opção</button>
+
+<script>
+  function adicionarOpcao() {
+    const input = document.getElementById('novaOpcao');
+    const valor = input.value.trim();
+
+    if (valor === "") {
+      alert("Digite algo válido!");
+      return;
+    }
+
+    // 1. Pega a lista existente ou cria uma nova vazia se não existir
+    let listaOpcoes = JSON.parse(localStorage.getItem('minhasOpcoes')) || [];
+
+    // 2. Adiciona o novo valor à lista
+    listaOpcoes.push(valor);
+
+    // 3. Salva a lista atualizada de volta no localStorage como texto
+    localStorage.setItem('minhasOpcoes', JSON.stringify(listaOpcoes));
+
+    // Limpa o input e avisa o usuário
+    input.value = "";
+    alert(`"${valor}" foi adicionado com sucesso!`);
+  }
+</script>

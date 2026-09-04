@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Exercicio4</title>
+</head>
+
+<body class="container">
+    <h1>Cadastro de Clientes</h1>
+    <p>Preencha os dados abaixo para cadastrar um novo cliente.</p>
+    <form class="d-flex flex-column gap-3">
+    <div>
+        <label class="form-label fw-bold" for="nome-completo">Nome Completo:</label>
+        <input id="nome-completo" type="text" placeholder="Digite o nome completo">
+    </div>
+
+    <div>
+        <label class="form-label fw-bold" for="CPF">CPF:</label>
+        <input id="CPF" type="text" placeholder="Digite o CPF">
+    </div>
+
+    <div>
+        <label class="form-label fw-bold" for="e-mail">E-MAIL:</label>
+        <input id="e-mail" type="text" placeholder="Digite o e-mail">
+    </div>
+
+    <div>
+        <label class="form-label fw-bold" for="telefone">Telefone:</label>
+        <input id="telefone" type="text" placeholder="Digite o telefone">
+    </div>
+
+    <div>
+        <label class="form-label fw-bold" for="data-nascimento">Data de nascimento::</label>
+        <input id="data-nascimento" type="text" placeholder="dd/mm/aaaa">
+    </div>
+
+    <div>
+        <label class="form-label fw-bold" for="estado">Estado:</label>
+        <select name="" id="tipo-cliente">
+            <option value="selecione">selecione</option>
+            <option value="PR">PR</option>
+            <option value="SP">SP</option>
+        </select>
+    </div>
+
+
+    <div>
+        <label class="form-label fw-bold" for="tipo-cliente">Tipo Cliente:</label>
+        <select name="" id="tipo-cliente">
+            <option value="selecione">selecione</option>
+            <option value="físico">Físico</option>
+            <option value="jurídico">Jurídico</option>
+        </select>
+    </div>
+
+     <div>
+            <label class="form-label fw-bold" for="observacoes">Observações:</label>
+            <textarea class="form-control" id="observacoes" placeholder="Digite alguma observação"></textarea>
+        </div>
+
+    <div>
+            <button class="btn btn-primary">Gravar</button>
+            <button class="btn btn-secondary">Limpar</button>
+        </div>
+
+    </form>
+</body>
+
+</html>

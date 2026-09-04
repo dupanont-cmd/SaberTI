@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Gerador de Tabuada</h1>
+        <label for="num">Digite o número: </label>
+        <p><input type="number" id="num"></p>
+        <button id="botao">Gerar Tabuada</button>
+        <div class="card" id="cardres">
+            <p id="novaLinha"></p>
+        </div>
+    </div>
+
+    <script>
+        let num = document.getElementById("num");
+        let botao = document.getElementById("botao");
+        let resultado = document.getElementById("resultado");
+        let cardres = document.getElementById("cardres")
+        let i = 0;
+        
+
+        botao.addEventListener("click", function () {
+                for (i = 0; i < 11; i++) {
+                   const novaLinha = document.createElement('p');
+                    novaLinha.innerText = (num.value + " x " + i + " = " + i * num.value);
+                    cardres.appendChild(novaLinha);
+                }
+            
+        })
+    </script>
+</body>
+
+</html>

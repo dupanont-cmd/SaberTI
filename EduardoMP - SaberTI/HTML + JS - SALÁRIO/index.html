@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>SALÁRIO FUNCIONÁRIO ANO</h1>
+
+    <div class="card">
+    <h2>JANEIRO</h2>
+    <label for="janeiro">Informe o salário bruto:</label>
+    <input type="text" id="SLB1">
+    <P></P>
+    <label for="janeiro">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC1">
+    </p>
+    <p id="res1"></p>
+    </div>
+
+    <div class="card">
+    <h2>FEVEREIRO</h2>
+
+    <label for="FEVEREIRO">Informe o salário bruto:</label>
+    <input type="text" id="SLB2">
+    <P></P>
+    <label for="FEVEREIRO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC2">
+    <p id="res2"></p>
+</div>
+
+    <div class="card">
+    <h2>MARÇO</h2>
+
+    <div class="card">
+    <label for="MARÇO">Informe o salário bruto:</label>
+    <input type="text" id="SLB3">
+    <P></P>
+    <label for="MARÇO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC3">
+    <p id="res3"></p>
+</div>
+    <h2>ABRIL</h2>
+
+    <div class="card">
+    <label for="ABRIL">Informe o salário bruto:</label>
+    <input type="text" id="SLB4">
+    <P></P>
+    <label for="ABRIL">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC4">
+    <p id="res4"></p>
+</div>
+    
+    <h2>MAIO</h2>
+
+    <div class="card">
+    <label for="MAIO">Informe o salário bruto:</label>
+    <input type="text" id="SLB5">
+    <P></P>
+    <label for="MAIO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC5">
+    <p id="res5"></p>
+</div>
+    <h2>JUNHO</h2>
+
+    <div class="card">
+    <label for="JUNHO">Informe o salário bruto:</label>
+    <input type="text" id="SLB6">
+    <P></P>
+    <label for="JUNHO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC6">
+    <p id="res6"></p>
+</div>
+    <h2>JULHO</h2>
+
+    <div class="card">
+    <label for="JULHO">Informe o salário bruto:</label>
+    <input type="text" id="SLB7">
+    <P></P>
+    <label for="JULHO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC7">
+    <p id="res7"></p>
+</div>
+    <h2>AGOSTO</h2>
+
+    <div class="card">
+    <label for="AGOSTO">Informe o salário bruto:</label>
+    <input type="text" id="SLB8">
+    <P></P>
+    <label for="AGOSTO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC8">
+    <p id="res8"></p>
+</div>
+    <h2>SETEMBRO</h2>
+
+    <div class="card">
+    <label for="SETEMBRO">Informe o salário bruto:</label>
+    <input type="text" id="SLB9">
+    <P></P>
+    <label for="SETEMBRO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC9">
+    <p id="res9"></p>
+</div>
+    <h2>OUTUBRO</h2>
+
+    <div class="card">
+    <label for="OUTUBRO">Informe o salário bruto:</label>
+    <input type="text" id="SLB10">
+    <P></P>
+    <label for="OUTUBRO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC10">
+    <p id="res10"></p>
+</div>
+    <h2>NOVEMBRO</h2>
+
+    <div class="card">
+    <label for="NOVEMBRO">Informe o salário bruto:</label>
+    <input type="text" id="SLB11">
+    <P></P>
+    <label for="NOVEMBRO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC11">
+    <p id="res11"></p>
+        </div>
+    <h2>DEZEMBRO</h2>
+
+    <div class="card">
+    <label for="DEZEMBRO">Informe o salário bruto:</label>
+    <input type="text" id="SLB12">
+    <P></P>
+    <label for="DEZEMBRO">Informe o percentual de desconto: </label>
+    <input type="text" id="PERC12">
+    <p id="res12"></p>
+        </div>
+    <button id="botaoMaster">CALCULAR TUDO</button>
+
+
+    <script>
+        //salario bruto
+
+        const SLB1 = document.getElementById("SLB1");
+        const SLB2 = document.getElementById("SLB2");
+        const SLB3 = document.getElementById("SLB3");
+        const SLB4 = document.getElementById("SLB4");
+        const SLB5 = document.getElementById("SLB5");
+        const SLB6 = document.getElementById("SLB6");
+        const SLB7 = document.getElementById("SLB7");
+        const SLB8 = document.getElementById("SLB8");
+        const SLB9 = document.getElementById("SLB9");
+        const SLB10 = document.getElementById("SLB10");
+        const SLB11 = document.getElementById("SLB11");
+        const SLB12 = document.getElementById("SLB12");
+
+        //percentual de desconto
+
+        const PERC1 = document.getElementById("PERC1")
+        const PERC2 = document.getElementById("PERC2")
+        const PERC3 = document.getElementById("PERC3")
+        const PERC4 = document.getElementById("PERC4")
+        const PERC5 = document.getElementById("PERC5")
+        const PERC6 = document.getElementById("PERC6")
+        const PERC7 = document.getElementById("PERC7")
+        const PERC8 = document.getElementById("PERC8")
+        const PERC9 = document.getElementById("PERC9")
+        const PERC10 = document.getElementById("PERC10")
+        const PERC11 = document.getElementById("PERC11")
+        const PERC12 = document.getElementById("PERC12")
+
+        //botao
+
+        let botaoMaster = document.getElementById("botaoMaster");
+
+        //res
+
+        const res1 = document.getElementById("res1");
+        const res2 = document.getElementById("res2");
+        const res3 = document.getElementById("res3");
+        const res4 = document.getElementById("res4");
+        const res5 = document.getElementById("res5");
+        const res6 = document.getElementById("res6");
+        const res7 = document.getElementById("res7");
+        const res8 = document.getElementById("res8");
+        const res9 = document.getElementById("res9");
+        const res10 = document.getElementById("res10");
+        const res11 = document.getElementById("res11");
+        const res12 = document.getElementById("res12");
+
+        botaoMaster.addEventListener("click", function () {
+            const SL1 = Number(SLB1.value) - (Number(SLB1.value) * Number(PERC1.value) / 100);
+            const SL2 = Number(SLB2.value) - (Number(SLB2.value) * Number(PERC2.value) / 100);
+            const SL3 = Number(SLB3.value) - (Number(SLB3.value) * Number(PERC3.value) / 100);
+            const SL4 = Number(SLB4.value) - (Number(SLB4.value) * Number(PERC4.value) / 100);
+            const SL5 = Number(SLB5.value) - (Number(SLB5.value) * Number(PERC5.value) / 100);
+            const SL6 = Number(SLB6.value) - (Number(SLB6.value) * Number(PERC6.value) / 100);
+            const SL7 = Number(SLB7.value) - (Number(SLB7.value) * Number(PERC7.value) / 100);
+            const SL8 = Number(SLB8.value) - (Number(SLB8.value) * Number(PERC8.value) / 100);
+            const SL9 = Number(SLB9.value) - (Number(SLB9.value) * Number(PERC9.value) / 100);
+            const SL10 = Number(SLB10.value) - (Number(SLB10.value) * Number(PERC10.value) / 100);
+            const SL11 = Number(SLB11.value) - (Number(SLB11.value) * Number(PERC11.value) / 100);
+            const SL12 = Number(SLB12.value) - (Number(SLB12.value) * Number(PERC12.value) / 100);
+
+            res1.innerText = "O VALOR LÍQUIDO É : " + SL1;
+            res2.innerText = "O VALOR LÍQUIDO É : " + SL2;
+            res3.innerText = "O VALOR LÍQUIDO É : " + SL3;
+            res4.innerText = "O VALOR LÍQUIDO É : " + SL4;
+            res5.innerText = "O VALOR LÍQUIDO É : " + SL5;
+            res6.innerText = "O VALOR LÍQUIDO É : " + SL6;
+            res7.innerText = "O VALOR LÍQUIDO É : " + SL7;
+            res8.innerText = "O VALOR LÍQUIDO É : " + SL8;
+            res9.innerText = "O VALOR LÍQUIDO É : " + SL9;
+            res10.innerText = "O VALOR LÍQUIDO É : " + SL10;
+            res11.innerText = "O VALOR LÍQUIDO É : " + SL11;
+            res12.innerText = "O VALOR LÍQUIDO É : " + SL12;
+
+        })
+    </script>
+</body>
+
+</html>

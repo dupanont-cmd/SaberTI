@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label for="nota">Nota Aluno: </label>
+    <p><input id="nota" type="number"></p>
+    <button id="botao">Verificar Situação</button>
+    <p id="situacao"></p>
+    <script>
+        let nota = document.getElementById("nota");
+        let botao = document.getElementById("botao");
+        let situacao = document.getElementById("situacao");
+
+        botao.addEventListener("click", function() {
+            if (nota.value > 6.9) {
+                situacao.innerText = "Aprovado!!!";
+            } else {
+                if (nota.value > 4.9 && nota.value < 7) {
+                    situacao.innerText = "Recuperação!!!";
+                    
+                } else {
+                    situacao.innerText = "Reprovado!!!";
+                }
+            }  
+        });
+    </script>
+</body>
+</html>

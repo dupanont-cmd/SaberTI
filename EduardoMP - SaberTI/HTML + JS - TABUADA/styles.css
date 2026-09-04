@@ -1,0 +1,43 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+button{
+    
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(174, 174, 250);
+    padding: 10px ;
+    
+    margin-bottom: 20px;
+    border-radius: 5px;
+    
+}
+.container{
+    padding: 20px;
+    padding-bottom: 20px;
+    border: 2px solid;
+    border-radius: 5px;
+    border-color: grey;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    
+}
+#novaLinha{
+    font-size: 2px;
+}
+
+.card{
+    align-items:start;
+    
+    padding: 140px;
+    
+    border: 2px solid;
+    border-color: gray;
+}

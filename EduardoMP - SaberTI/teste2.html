@@ -1,0 +1,24 @@
+<!-- pagina2.html -->
+<label for="meuSelect">Escolha uma opção salva:</label>
+<select id="meuSelect">
+  <option value="">-- Selecione uma opção --</option>
+</select>
+
+<script>
+  // Executa o código assim que a página carrega
+  window.onload = function() {
+    // 1. Pega a lista do localStorage e converte de volta para Array
+    const listaSalva = JSON.parse(localStorage.getItem('minhasOpcoes')) || [];
+    const select = document.getElementById('meuSelect');
+
+    // 2. Passa por cada item da lista e cria uma <option> no HTML
+    listaSalva.forEach(function(item) {
+      const novaOpcao = document.createElement('option');
+      novaOpcao.value = item;
+      novaOpcao.text = item;
+      
+      // Adiciona o item ao final do elemento <select>
+      select.appendChild(novaOpcao);
+    });
+  };
+</script>

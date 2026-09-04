@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <title> Calculo Area do Círculo </title>
+</head>
+
+<body>
+    <div class="card">
+        <h1> Cálculo Área do Círculo </h1>
+        <form onsubmit="calcularArea(); return false" ;>
+            <label for="raio"> Raio: </label>
+            <p> <input id="resultado" type="number" name="raio" id="raio" step="0.01" required></p>
+            <br><br>
+            <input id="calculo" type="submit" value="Calcular">
+            <p><label for="area"> A área do Círculo é: </label></p>
+            <input id="resultado" type="text" id="area" readonly>
+        </form>
+        <script src="calculoraio.js"></script>
+    </div>
+</body>
+
+</html>
