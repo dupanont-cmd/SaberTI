@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova categoria | EMP System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --roxo-escuro: #4C1D95;
+      --roxo: #6D28D9;
+      --roxo-claro: #8B5CF6;
+      --roxo-tint: #F5F1FE;
+      --roxo-borda: #DCD1F7;
+      --texto: #2E1A47;
+      --texto-suave: #6B5C82;
+      --branco: #FFF;
+      --erro: #D6335A;
+      --sucesso: #24835B;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--roxo-tint);
+      color: var(--texto);
+      font-family: Inter, sans-serif;
+    }
+
+    .menu-lateral {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      width: 290px;
+      height: 100vh;
+      padding: 28px 18px 22px;
+      background: var(--branco);
+      border-right: 1px solid var(--roxo-borda);
+    }
+
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 28px;
+      border-bottom: 1px solid var(--roxo-borda);
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      padding: 5px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 50%;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .nome-sistema,
+    h1 {
+      margin: 0;
+      color: var(--roxo-escuro);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+    }
+
+    .nome-sistema {
+      font-size: 1.05rem;
+    }
+
+    .texto-menu {
+      margin: 26px 10px 10px;
+      color: var(--texto-suave);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .opcoes-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .opcao-menu {
+      display: block;
+      padding: 13px 14px;
+      border-radius: 10px;
+      color: var(--texto);
+      font-size: .9rem;
+      text-decoration: none;
+    }
+
+    .opcao-menu:hover,
+    .opcao-menu.ativa {
+      background: var(--roxo-tint);
+      color: var(--roxo-escuro);
+    }
+
+    .rodape-menu {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--roxo-borda);
+    }
+
+    .botao-sair {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 10px;
+      background: var(--branco);
+      color: var(--roxo);
+      font: 600 .88rem Inter, sans-serif;
+      cursor: pointer;
+    }
+
+    .conteudo {
+      min-height: 100vh;
+      margin-left: 290px;
+      padding: 42px;
+    }
+
+    .topo {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+      font-size: 1.8rem;
+    }
+
+    .subtitulo {
+      margin: 0;
+      color: var(--texto-suave);
+    }
+
+    .botao-voltar,
+    .botao {
+      padding: 11px 15px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 10px;
+      background: var(--branco);
+      color: var(--roxo);
+      font: 600 .88rem Inter, sans-serif;
+      cursor: pointer;
+    }
+
+    .botao:hover,
+    .botao-voltar:hover {
+      background: var(--roxo-tint);
+    }
+
+    .cartao {
+      width: 100%;
+      max-width: 720px;
+      padding: 30px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 16px;
+      background: var(--branco);
+      box-shadow: 0 20px 45px -30px rgba(76, 29, 149, .35);
+    }
+
+    .campo {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--roxo-escuro);
+      font-size: .84rem;
+      font-weight: 600;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--roxo-borda);
+      border-radius: 10px;
+      outline: none;
+      color: var(--texto);
+      background: var(--roxo-tint);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--roxo-claro);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, .18);
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .botao-salvar {
+      border-color: var(--roxo);
+      background: var(--roxo);
+      color: var(--branco);
+    }
+
+    .botao-salvar:hover {
+      background: var(--roxo-escuro);
+    }
+
+    .mensagem {
+      min-height: 20px;
+      margin: 0 0 18px;
+      font-size: .84rem;
+    }
+
+    .mensagem.erro {
+      color: var(--erro);
+    }
+
+    .mensagem.sucesso {
+      color: var(--sucesso);
+    }
+
+    @media(max-width:650px) {
+      .menu-lateral {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .rodape-menu {
+        margin-top: 24px;
+      }
+
+      .conteudo {
+        margin-left: 0;
+        padding: 28px 18px;
+      }
+
+      .topo {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .cartao {
+        padding: 22px;
+      }
+
+      .botoes {
+        flex-wrap: wrap;
+      }
+
+      .botao {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="menu-lateral">
+    <div class="marca">
+      <div class="logo"><img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiz6hjQ62svFZZKuzyxGbxIxeVa0AbIXk6BHW9EP5j-g&s=10"
+          alt="Logo da empresa"></div>
+      <p class="nome-sistema">EMP System</p>
+    </div>
+    <p class="texto-menu">Menu principal</p>
+    <nav class="opcoes-menu" aria-label="Menu principal"><a class="opcao-menu" href="clientes.html">Cadastro de
+        Clientes</a><a class="opcao-menu ativa" href="categorias-produto.html">Cadastro de Categorias de Produto</a><a
+        class="opcao-menu" href="produtos.html">Cadastro de Produtos</a><a class="opcao-menu" href="orcamentos.html">Tela de Orçamentos</a></nav>
+    <div class="rodape-menu"><button class="botao-sair" id="botaoSair" type="button">Sign out</button></div>
+  </aside>
+  <main class="conteudo">
+    <div class="topo"><button class="botao-voltar" id="botaoVoltar" type="button">← Voltar</button>
+      <div>
+        <h1 id="tituloPagina">Nova categoria</h1>
+        <p class="subtitulo" id="subtituloPagina">Preencha os dados para cadastrar uma categoria.</p>
+      </div>
+    </div>
+    <!-- Após salvar, o formulário fica limpo para cadastrar outra categoria rapidamente. -->
+    <form class="cartao" id="formCategoria">
+      <p class="mensagem" id="mensagemGeral" aria-live="polite"></p>
+      <div class="campo"><label for="nomeCategoria">Nome da categoria</label><input id="nomeCategoria" type="text"
+          placeholder="Ex.: Eletrônicos" required autofocus></div>
+      <div class="campo"><label for="descricaoCategoria">Descrição da categoria</label><textarea id="descricaoCategoria"
+          placeholder="Descreva a categoria" required></textarea></div>
+      <div class="campo"><label for="dataCategoria">Data da categoria</label><input id="dataCategoria" type="date"
+          required></div>
+      <div class="botoes"><button class="botao" id="botaoLimpar" type="button">Limpar</button><button
+          class="botao botao-salvar" id="botaoSalvar" type="submit">Salvar e cadastrar outra</button></div>
+    </form>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="cadastro-categoria-produto.js"></script>
+</body>
+
+</html>

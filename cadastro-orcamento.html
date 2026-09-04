@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo orçamento | EMP System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --roxo-escuro: #4C1D95;
+      --roxo: #6D28D9;
+      --roxo-claro: #8B5CF6;
+      --roxo-tint: #F5F1FE;
+      --roxo-borda: #DCD1F7;
+      --texto: #2E1A47;
+      --texto-suave: #6B5C82;
+      --branco: #FFF;
+      --erro: #D6335A;
+      --sucesso: #24835B;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--roxo-tint);
+      color: var(--texto);
+      font-family: Inter, sans-serif;
+    }
+
+    /* Menu lateral mantido igual ao das outras páginas do sistema. */
+    .menu-lateral {
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      width: 290px;
+      height: 100vh;
+      padding: 28px 18px 22px;
+      background: #fff;
+      border-right: 1px solid var(--roxo-borda);
+    }
+
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 10px 28px;
+      border-bottom: 1px solid var(--roxo-borda);
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      padding: 5px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 50%;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+
+    .nome-sistema,
+    h1 {
+      margin: 0;
+      color: var(--roxo-escuro);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+    }
+
+    .texto-menu {
+      margin: 26px 10px 10px;
+      color: var(--texto-suave);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .opcoes-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .opcao-menu {
+      display: block;
+      padding: 13px 14px;
+      border-radius: 10px;
+      color: var(--texto);
+      font-size: .9rem;
+      text-decoration: none;
+    }
+
+    .opcao-menu:hover,
+    .opcao-menu.ativa {
+      background: var(--roxo-tint);
+      color: var(--roxo-escuro);
+    }
+
+    .rodape-menu {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid var(--roxo-borda);
+    }
+
+    .botao-sair {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--roxo);
+      font: 600 .88rem Inter;
+      cursor: pointer;
+    }
+
+    /* Organização do formulário. */
+    .conteudo {
+      min-height: 100vh;
+      margin-left: 290px;
+      padding: 42px;
+    }
+
+    .topo {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+      font-size: 1.8rem;
+    }
+
+    .subtitulo {
+      margin: 0;
+      color: var(--texto-suave);
+    }
+
+    .botao-voltar,
+    .botao {
+      padding: 11px 15px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--roxo);
+      font: 600 .88rem Inter;
+      cursor: pointer;
+    }
+
+    .cartao {
+      max-width: 1050px;
+      padding: 30px;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 20px 45px -30px rgba(76, 29, 149, .35);
+    }
+
+    .campos-principais {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .campo {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--roxo-escuro);
+      font-size: .84rem;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--roxo-borda);
+      border-radius: 10px;
+      outline: none;
+      color: var(--texto);
+      background: var(--roxo-tint);
+      font: inherit;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--roxo-claro);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, .18);
+    }
+
+    .titulo-itens {
+      margin: 8px 0 14px;
+      color: var(--roxo-escuro);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.1rem;
+    }
+
+    .tabela-responsiva {
+      overflow-x: auto;
+      border: 1px solid var(--roxo-borda);
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--roxo-tint);
+    }
+
+    th {
+      background: #FBFAFE;
+      color: var(--texto-suave);
+      font-size: .75rem;
+      text-transform: uppercase;
+    }
+
+    .linha-item select,
+    .linha-item input {
+      min-width: 120px;
+      padding: 9px 10px;
+    }
+
+    .subtotal {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .botao-remover {
+      border-color: #F3BDCC;
+      color: var(--erro);
+    }
+
+    .botao-adicionar {
+      margin-top: 14px;
+    }
+
+    .resumo-total {
+      margin: 20px 0 0;
+      color: var(--roxo-escuro);
+      text-align: right;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .botao-salvar {
+      border-color: var(--roxo);
+      background: var(--roxo);
+      color: #fff;
+    }
+
+    .mensagem {
+      min-height: 20px;
+      margin: 0 0 18px;
+      font-size: .84rem;
+    }
+
+    .erro {
+      color: var(--erro);
+    }
+
+    .sucesso {
+      color: var(--sucesso);
+    }
+
+    @media(max-width:760px) {
+      .menu-lateral {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .conteudo {
+        margin-left: 0;
+        padding: 28px 18px;
+      }
+
+      .topo {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .cartao {
+        padding: 22px;
+      }
+
+      .campos-principais {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="menu-lateral">
+    <div class="marca">
+      <div class="logo"><img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiz6hjQ62svFZZKuzyxGbxIxeVa0AbIXk6BHW9EP5j-g&s=10"
+          alt="Logo da empresa"></div>
+      <p class="nome-sistema">EMP System</p>
+    </div>
+    <p class="texto-menu">Menu principal</p>
+    <nav class="opcoes-menu" aria-label="Menu principal"><a class="opcao-menu" href="clientes.html">Cadastro de
+        Clientes</a><a class="opcao-menu" href="categorias-produto.html">Cadastro de Categorias de Produto</a><a
+        class="opcao-menu" href="produtos.html">Cadastro de Produtos</a><a class="opcao-menu ativa"
+        href="orcamentos.html">Tela de Orçamentos</a></nav>
+    <div class="rodape-menu"><button class="botao-sair" id="botaoSair" type="button">Sign out</button></div>
+  </aside>
+  <main class="conteudo">
+    <div class="topo"><button class="botao-voltar" id="botaoVoltar" type="button">← Voltar</button>
+      <div>
+        <h1 id="tituloPagina">Novo orçamento</h1>
+        <p class="subtitulo" id="subtituloPagina">Informe o cliente, as datas e os produtos do orçamento.</p>
+      </div>
+    </div>
+    <!-- Os dados deste formulário serão gravados em orcamento e orcamento_item. -->
+    <form class="cartao" id="formOrcamento">
+      <p class="mensagem" id="mensagemGeral" aria-live="polite"></p>
+      <div class="campos-principais">
+        <div class="campo"><label for="clienteId">Cliente</label><select id="clienteId" required>
+            <option value="">Carregando clientes...</option>
+          </select></div>
+        <div class="campo"><label for="dataOrcamento">Data de expedição</label><input id="dataOrcamento" type="date"
+            required></div>
+        <div class="campo"><label for="dataValidade">Data de validade</label><input id="dataValidade" type="date"
+            required></div>
+      </div>
+      <h2 class="titulo-itens">Produtos selecionados</h2>
+      <!-- Cada linha representa um registro que será salvo em orcamento_item. -->
+      <div class="tabela-responsiva">
+        <table>
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Valor unitário</th>
+              <th>Quantidade</th>
+              <th>Valor × quantidade</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="listaItens"></tbody>
+        </table>
+      </div>
+      <button class="botao botao-adicionar" id="botaoAdicionarItem" type="button">+ Adicionar produto</button>
+      <p class="resumo-total">Valor total do orçamento: <span id="valorTotal">R$ 0,00</span></p>
+      <div class="botoes"><button class="botao" id="botaoLimpar" type="button">Limpar</button><button
+          class="botao botao-salvar" id="botaoSalvar" type="submit">Salvar orçamento</button></div>
+    </form>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="cadastro-orcamento.js"></script>
+</body>
+
+</html>
