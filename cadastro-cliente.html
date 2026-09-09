@@ -335,7 +335,8 @@
     <div class="topo"><button class="botao-voltar" id="botaoVoltar" type="button">← Voltar</button>
       <div>
         <h1 id="tituloPagina">Novo cliente</h1>
-        <p class="subtitulo">Preencha os dados abaixo para cadastrar um cliente.</p>
+        <!-- Permite adaptar a orientação quando o formulário abre para edição. -->
+        <p class="subtitulo" id="subtituloPagina">Preencha os dados abaixo para cadastrar um cliente.</p>
       </div>
     </div>
     <form class="cartao" id="formCliente">
@@ -349,8 +350,9 @@
           placeholder="Digite o nome" required></div>
       <div class="campo"><label for="cpfCnpj">CPF / CNPJ</label><input id="cpfCnpj" type="text"
           placeholder="Digite o CPF ou CNPJ" maxlength="18" required></div>
-      <div class="campo"><label for="telefone">Telefone</label><input id="telefone" type="text"
-          placeholder="Digite o telefone" required>
+      <!-- Mostra um exemplo com DDD e oferece o teclado de telefone em celulares. -->
+      <div class="campo"><label for="telefone">Telefone</label><input id="telefone" type="tel"
+          placeholder="(11) 99999-9999" required>
         <p class="dica">Pressione Enter em um campo para ir ao próximo.</p>
       </div>
       <div class="botoes"><button class="botao" id="botaoLimpar" type="button">Limpar</button><button

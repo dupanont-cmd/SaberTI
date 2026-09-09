@@ -8,58 +8,243 @@ const listaOrcamentos = document.getElementById("listaOrcamentos");
 const campoBusca = document.getElementById("campoBusca");
 const seletorOrdem = document.getElementById("seletorOrdem");
 const selecionarTodos = document.getElementById("selecionarTodos");
-const botaoExcluirSelecionados = document.getElementById("botaoExcluirSelecionados");
-let orcamentos = [], itensPorOrcamento = {}, produtosPorId = {}, idsSelecionados = [];
+const botaoExcluirSelecionados = document.getElementById(
+  "botaoExcluirSelecionados",
+);
+let orcamentos = [],
+  itensPorOrcamento = {},
+  idsSelecionados = [];
 
 // Formata valores recebidos do Supabase antes de os colocar no HTML.
-function textoSeguro(valor) { const elemento = document.createElement("span"); elemento.textContent = valor ?? "Não informado"; return elemento.innerHTML; }
-function formatarData(data) { return data ? new Date(String(data).slice(0, 10) + "T00:00:00").toLocaleDateString("pt-BR") : "Não informada"; }
-function formatarMoeda(valor) { return Number(valor || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
-function valorUnitario(produto) { return Number(produto?.vl_unitario ?? produto?.valor_produto ?? produto?.vl_produto ?? 0); }
+function textoSeguro(valor) {
+  const elemento = document.createElement("span");
+  elemento.textContent = valor ?? "Não informado";
+  return elemento.innerHTML;
+}
+function formatarData(data) {
+  return data
+    ? new Date(String(data).slice(0, 10) + "T00:00:00").toLocaleDateString(
+        "pt-BR",
+      )
+    : "Não informada";
+}
+function formatarMoeda(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+}
+function valorUnitario(produto) {
+  return Number(
+    produto?.vl_unitario ?? produto?.valor_produto ?? produto?.vl_produto ?? 0,
+  );
+}
 
 // Carrega e agrupa os dados necessários para uma lista completa de orçamentos.
 async function carregarDadosRelacionados() {
-  const [respostaItens, respostaProdutos] = await Promise.all([supabaseClient.from("orcamento_item").select("*"), supabaseClient.from("produto").select("*")]);
-  if (respostaItens.error) throw respostaItens.error;
-  if (respostaProdutos.error) throw respostaProdutos.error;
-  itensPorOrcamento = {}; produtosPorId = {};
-  respostaItens.data.forEach(function (item) { if (!itensPorOrcamento[item.orcamentoid]) itensPorOrcamento[item.orcamentoid] = []; itensPorOrcamento[item.orcamentoid].push(item); });
-  respostaProdutos.data.forEach(function (produto) { produtosPorId[produto.produtoid] = produto; });
+  // Os detalhes vêm da foto salva; a listagem não depende mais do catálogo.
+  const { data, error } = await supabaseClient
+    .from("orcamento_item")
+    .select("*");
+  if (error) throw error;
+  itensPorOrcamento = {};
+  data.forEach(function (item) {
+    if (!itensPorOrcamento[item.orcamentoid])
+      itensPorOrcamento[item.orcamentoid] = [];
+    itensPorOrcamento[item.orcamentoid].push(item);
+  });
 }
-
 // Mostra um orçamento por linha, com todos os detalhes de seus itens.
 function mostrarOrcamentos(lista) {
-  if (!lista.length) { listaOrcamentos.innerHTML = '<tr><td class="mensagem" colspan="8">Nenhum orçamento encontrado.</td></tr>'; return; }
+  if (!lista.length) {
+    listaOrcamentos.innerHTML =
+      '<tr><td class="mensagem" colspan="8">Nenhum orçamento encontrado.</td></tr>';
+    return;
+  }
   listaOrcamentos.innerHTML = "";
   lista.forEach(function (orcamento) {
-    const id = orcamento.orcamentoid, itens = itensPorOrcamento[id] || [];
-    const detalhes = itens.length ? itens.map(function (item) { const produto = produtosPorId[item.produtoid], quantidade = Number(item.qt_produto || 0), unitario = valorUnitario(produto), subtotal = item.vl_total ?? unitario * quantidade, nome = produto?.nome_produto || "Produto ID " + item.produtoid; return `<li><strong>${textoSeguro(nome)}</strong> (ID ${textoSeguro(item.produtoid)})<br>Qtd.: ${textoSeguro(quantidade)} · Unit.: ${formatarMoeda(unitario)} · Total: ${formatarMoeda(subtotal)}</li>`; }).join("") : "<li>Nenhum item cadastrado.</li>";
+    const id = orcamento.orcamentoid,
+      itens = itensPorOrcamento[id] || [];
+    // Nome, descrição e valores históricos continuam disponíveis após a exclusão.
+    const detalhes = itens.length
+      ? itens
+          .map(function (item) {
+            const quantidade = Number(item.qt_produto || 0);
+            const unitario = Number(
+              item.vl_unitario ??
+                (quantidade > 0 ? item.vl_total / quantidade : 0),
+            );
+            const subtotal = item.vl_total ?? unitario * quantidade;
+            const nome = item.nome_produto || "Produto do orçamento";
+            // Mostra apenas nome, quantidade e valores para deixar a tabela mais limpa.
+            return `<li><strong>${textoSeguro(nome)}</strong><br>Qtd.: ${textoSeguro(quantidade)} · Unit.: ${formatarMoeda(unitario)} · Total: ${formatarMoeda(subtotal)}</li>`;
+          })
+          .join("")
+      : "<li>Nenhum item cadastrado.</li>";
     const linha = document.createElement("tr");
     linha.innerHTML = `<td><input class="checkbox selecionar-orcamento" type="checkbox" value="${textoSeguro(id)}" ${idsSelecionados.includes(String(id)) ? "checked" : ""}></td><td>${textoSeguro(id)}</td><td>${textoSeguro(orcamento.clienteid)}</td><td>${formatarData(orcamento.dt_orcamento)}</td><td>${formatarData(orcamento.dt_validade_orcamento)}</td><td><ul class="itens">${detalhes}</ul></td><td>${formatarMoeda(orcamento.vl_total_orcamento)}</td><td><div class="acoes"><button class="botao editar" type="button">Editar</button><button class="botao botao-excluir excluir" type="button">Excluir</button></div></td>`;
-    linha.querySelector(".selecionar-orcamento").addEventListener("change", atualizarSelecionados);
-    linha.querySelector(".editar").addEventListener("click", function () { window.location.href = "cadastro-orcamento.html?id=" + id; });
-    linha.querySelector(".excluir").addEventListener("click", function () { excluirOrcamentos([id]); });
+    linha
+      .querySelector(".selecionar-orcamento")
+      .addEventListener("change", atualizarSelecionados);
+    linha.querySelector(".editar").addEventListener("click", function () {
+      window.location.href = "cadastro-orcamento.html?id=" + id;
+    });
+    // Adiciona um botão que prepara a impressão apenas do orçamento desta linha.
+    const botaoImprimir = document.createElement("button");
+    botaoImprimir.type = "button";
+    // A classe posiciona a impressão abaixo dos botões Editar e Excluir.
+    botaoImprimir.className = "botao botao-imprimir";
+    botaoImprimir.textContent = "Imprimir";
+    botaoImprimir.addEventListener("click", function () {
+      imprimirOrcamento(orcamento);
+    });
+    linha.querySelector(".acoes").appendChild(botaoImprimir);
+    linha.querySelector(".excluir").addEventListener("click", function () {
+      excluirOrcamentos([id]);
+    });
     listaOrcamentos.appendChild(linha);
-  }); atualizarSelecionados();
+  });
+  atualizarSelecionados();
 }
 
-// Busca as três tabelas antes de filtrar ou ordenar a lista exibida.
+// Preenche o modelo com os dados salvos do orçamento escolhido.
+function imprimirOrcamento(orcamento) {
+  document.getElementById("imp-numero").textContent = orcamento.orcamentoid;
+  document.getElementById("imp-cliente").textContent = orcamento.clienteid;
+  document.getElementById("imp-data").textContent = formatarData(
+    orcamento.dt_orcamento,
+  );
+  document.getElementById("imp-validade").textContent = formatarData(
+    orcamento.dt_validade_orcamento,
+  );
+  document.getElementById("imp-total").textContent = formatarMoeda(
+    orcamento.vl_total_orcamento,
+  );
+
+  // Limpa os itens da impressão anterior para não misturar orçamentos diferentes.
+  const tabelaItens = document.getElementById("imp-itens");
+  const itens = itensPorOrcamento[orcamento.orcamentoid] || [];
+  tabelaItens.innerHTML = "";
+
+  // Usa os nomes e preços históricos dos itens, mesmo que o produto tenha sido alterado.
+  itens.forEach(function (item) {
+    const quantidade = Number(item.qt_produto || 0);
+    const unitario = Number(
+      item.vl_unitario ?? (quantidade > 0 ? item.vl_total / quantidade : 0),
+    );
+    const subtotal = item.vl_total ?? unitario * quantidade;
+    const linha = document.createElement("tr");
+    // Protege os textos antes de inseri-los no HTML da tabela de impressão.
+    linha.innerHTML = `
+      <td>${textoSeguro(item.nome_produto || "Produto do orçamento")}</td>
+      <td>${textoSeguro(item.ds_produto || "")}</td>
+      <td>${textoSeguro(quantidade)}</td>
+      <td>${formatarMoeda(unitario)}</td>
+      <td>${formatarMoeda(subtotal)}</td>`;
+    tabelaItens.appendChild(linha);
+  });
+
+  // Informa quando não há itens e abre a janela para imprimir ou salvar em PDF.
+  if (itens.length === 0) {
+    tabelaItens.innerHTML =
+      '<tr><td colspan="5">Nenhum item cadastrado.</td></tr>';
+  }
+  window.print();
+}
+
+// Busca os orçamentos e suas fotos antes de filtrar ou ordenar a lista.
 async function carregarOrcamentos() {
-  listaOrcamentos.innerHTML = '<tr><td class="mensagem" colspan="8">Carregando orçamentos...</td></tr>';
+  listaOrcamentos.innerHTML =
+    '<tr><td class="mensagem" colspan="8">Carregando orçamentos...</td></tr>';
   const respostaOrcamentos = await supabaseClient.from("orcamento").select("*");
-  if (respostaOrcamentos.error) { listaOrcamentos.innerHTML = `<tr><td class="mensagem erro" colspan="8">Não foi possível carregar os orçamentos: ${textoSeguro(respostaOrcamentos.error.message)}</td></tr>`; return; }
-  try { await carregarDadosRelacionados(); } catch (erro) { listaOrcamentos.innerHTML = `<tr><td class="mensagem erro" colspan="8">Não foi possível carregar os itens ou produtos: ${textoSeguro(erro.message)}</td></tr>`; return; }
-  orcamentos = respostaOrcamentos.data || []; filtrarOrcamentos();
+  if (respostaOrcamentos.error) {
+    listaOrcamentos.innerHTML = `<tr><td class="mensagem erro" colspan="8">Não foi possível carregar os orçamentos: ${textoSeguro(respostaOrcamentos.error.message)}</td></tr>`;
+    return;
+  }
+  try {
+    await carregarDadosRelacionados();
+  } catch (erro) {
+    listaOrcamentos.innerHTML = `<tr><td class="mensagem erro" colspan="8">Não foi possível carregar os itens ou produtos: ${textoSeguro(erro.message)}</td></tr>`;
+    return;
+  }
+  orcamentos = respostaOrcamentos.data || [];
+  filtrarOrcamentos();
 }
 
 // Busca somente no clienteid e ordena pela data de expedição escolhida.
-function filtrarOrcamentos() { const busca = campoBusca.value.trim().toLowerCase(); const resultado = orcamentos.filter(function (orcamento) { return String(orcamento.clienteid ?? "").toLowerCase().includes(busca); }); resultado.sort(function (a, b) { const dataA = new Date(a.dt_orcamento || 0).getTime(), dataB = new Date(b.dt_orcamento || 0).getTime(); return seletorOrdem.value === "asc" ? dataA - dataB : dataB - dataA; }); mostrarOrcamentos(resultado); }
+function filtrarOrcamentos() {
+  const busca = campoBusca.value.trim().toLowerCase();
+  const resultado = orcamentos.filter(function (orcamento) {
+    return String(orcamento.clienteid ?? "")
+      .toLowerCase()
+      .includes(busca);
+  });
+  resultado.sort(function (a, b) {
+    const dataA = new Date(a.dt_orcamento || 0).getTime(),
+      dataB = new Date(b.dt_orcamento || 0).getTime();
+    return seletorOrdem.value === "asc" ? dataA - dataB : dataB - dataA;
+  });
+  mostrarOrcamentos(resultado);
+}
 
 // Guarda as caixas marcadas e habilita a exclusão em lote.
-function atualizarSelecionados() { idsSelecionados = Array.from(document.querySelectorAll(".selecionar-orcamento:checked")).map(function (caixa) { return caixa.value; }); const caixas = document.querySelectorAll(".selecionar-orcamento"); botaoExcluirSelecionados.disabled = idsSelecionados.length === 0; selecionarTodos.checked = caixas.length > 0 && caixas.length === idsSelecionados.length; }
+function atualizarSelecionados() {
+  idsSelecionados = Array.from(
+    document.querySelectorAll(".selecionar-orcamento:checked"),
+  ).map(function (caixa) {
+    return caixa.value;
+  });
+  const caixas = document.querySelectorAll(".selecionar-orcamento");
+  botaoExcluirSelecionados.disabled = idsSelecionados.length === 0;
+  selecionarTodos.checked =
+    caixas.length > 0 && caixas.length === idsSelecionados.length;
+}
 
 // Exclui os itens antes dos orçamentos para respeitar a ligação entre as tabelas.
-async function excluirOrcamentos(ids) { if (!window.confirm(`Deseja realmente excluir ${ids.length > 1 ? ids.length + " orçamentos" : "este orçamento"}?`)) return; const { error: erroItens } = await supabaseClient.from("orcamento_item").delete().in("orcamentoid", ids); if (erroItens) { alert("Não foi possível excluir os itens: " + erroItens.message); return; } const { error } = await supabaseClient.from("orcamento").delete().in("orcamentoid", ids); if (error) { alert("Os itens foram excluídos, mas não foi possível excluir o orçamento: " + error.message); return; } idsSelecionados = []; selecionarTodos.checked = false; carregarOrcamentos(); }
+async function excluirOrcamentos(ids) {
+  if (
+    !window.confirm(
+      `Deseja realmente excluir ${ids.length > 1 ? ids.length + " orçamentos" : "este orçamento"}?`,
+    )
+  )
+    return;
+  const { error: erroItens } = await supabaseClient
+    .from("orcamento_item")
+    .delete()
+    .in("orcamentoid", ids);
+  if (erroItens) {
+    alert("Não foi possível excluir os itens: " + erroItens.message);
+    return;
+  }
+  const { error } = await supabaseClient
+    .from("orcamento")
+    .delete()
+    .in("orcamentoid", ids);
+  if (error) {
+    alert(
+      "Os itens foram excluídos, mas não foi possível excluir o orçamento: " +
+        error.message,
+    );
+    return;
+  }
+  idsSelecionados = [];
+  selecionarTodos.checked = false;
+  carregarOrcamentos();
+}
 
 // Eventos dos controles da página e carregamento inicial.
-campoBusca.addEventListener("input", filtrarOrcamentos); seletorOrdem.addEventListener("change", filtrarOrcamentos); selecionarTodos.addEventListener("change", function () { document.querySelectorAll(".selecionar-orcamento").forEach(function (caixa) { caixa.checked = selecionarTodos.checked; }); atualizarSelecionados(); }); botaoExcluirSelecionados.addEventListener("click", function () { excluirOrcamentos(idsSelecionados); }); document.getElementById("botaoSair").addEventListener("click", function () { window.location.href = "index.html"; }); carregarOrcamentos();
+campoBusca.addEventListener("input", filtrarOrcamentos);
+seletorOrdem.addEventListener("change", filtrarOrcamentos);
+selecionarTodos.addEventListener("change", function () {
+  document.querySelectorAll(".selecionar-orcamento").forEach(function (caixa) {
+    caixa.checked = selecionarTodos.checked;
+  });
+  atualizarSelecionados();
+});
+botaoExcluirSelecionados.addEventListener("click", function () {
+  excluirOrcamentos(idsSelecionados);
+});
+document.getElementById("botaoSair").addEventListener("click", function () {
+  window.location.href = "index.html";
+});
+carregarOrcamentos();

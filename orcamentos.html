@@ -1,23 +1,432 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orçamentos | EMP System</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{--roxo-escuro:#4C1D95;--roxo:#6D28D9;--roxo-claro:#8B5CF6;--roxo-tint:#F5F1FE;--roxo-borda:#DCD1F7;--texto:#2E1A47;--texto-suave:#6B5C82;--branco:#FFF;--erro:#D6335A}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--roxo-tint);color:var(--texto);font-family:Inter,sans-serif}.menu-lateral{position:fixed;display:flex;flex-direction:column;width:290px;height:100vh;padding:28px 18px 22px;background:var(--branco);border-right:1px solid var(--roxo-borda)}.marca{display:flex;align-items:center;gap:12px;padding:0 10px 28px;border-bottom:1px solid var(--roxo-borda)}.logo{width:48px;height:48px;padding:5px;border:1px solid var(--roxo-borda);border-radius:50%}.logo img{width:100%;height:100%;object-fit:contain;border-radius:50%}.nome-sistema,h1{margin:0;color:var(--roxo-escuro);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}.texto-menu{margin:26px 10px 10px;color:var(--texto-suave);font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase}.opcoes-menu{display:flex;flex-direction:column;gap:7px}.opcao-menu{display:block;padding:13px 14px;border-radius:10px;color:var(--texto);font-size:.9rem;text-decoration:none}.opcao-menu:hover,.opcao-menu.ativa{background:var(--roxo-tint);color:var(--roxo-escuro)}.rodape-menu{margin-top:auto;padding-top:20px;border-top:1px solid var(--roxo-borda)}.botao-sair{width:100%;padding:12px;border:1px solid var(--roxo-borda);border-radius:10px;background:#fff;color:var(--roxo);font:600 .88rem Inter;cursor:pointer}
-    /* Área principal com os mesmos cartões e botões das demais telas. */
-    .conteudo{min-height:100vh;margin-left:290px;padding:42px}.cabecalho{display:flex;justify-content:space-between;gap:18px;margin-bottom:28px}h1{margin-bottom:6px;font-size:1.8rem}.subtitulo{margin:0;color:var(--texto-suave)}.botoes-topo,.acoes{display:flex;gap:8px}.botao,.botao-novo{padding:11px 14px;border:1px solid var(--roxo-borda);border-radius:10px;background:#fff;color:var(--roxo);font:600 .85rem Inter;text-decoration:none;cursor:pointer;white-space:nowrap}.botao-novo{border-color:var(--roxo);background:var(--roxo);color:#fff}.botao-excluir{border-color:#F3BDCC;color:var(--erro)}.botao:disabled{opacity:.55;cursor:not-allowed}.filtros{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}.campo-busca{flex:1 1 280px}input,select{min-height:44px;padding:0 14px;border:1.5px solid var(--roxo-borda);border-radius:10px;background:#fff;color:var(--texto);font:inherit;outline:none}.campo-busca input{width:100%}input:focus,select:focus{border-color:var(--roxo-claro);box-shadow:0 0 0 3px rgba(139,92,246,.18)}.cartao-tabela{overflow:hidden;border:1px solid var(--roxo-borda);border-radius:14px;background:#fff}.tabela-responsiva{overflow-x:auto}table{width:100%;min-width:1240px;border-collapse:collapse}th,td{padding:15px 18px;text-align:left;vertical-align:top;border-bottom:1px solid var(--roxo-tint)}th{background:#FBFAFE;color:var(--texto-suave);font-size:.75rem;text-transform:uppercase}td{font-size:.88rem}.checkbox{width:18px;height:18px;accent-color:var(--roxo);cursor:pointer}.itens{min-width:250px;margin:0;padding-left:18px;line-height:1.55}.itens li+li{margin-top:5px}.mensagem{padding:26px;color:var(--texto-suave);text-align:center}.erro{color:var(--erro)}@media(max-width:650px){.menu-lateral{position:static;width:100%;height:auto}.rodape-menu{margin-top:24px}.conteudo{margin-left:0;padding:28px 18px}.cabecalho{flex-direction:column}select{width:100%}}
-  </style>
-</head>
-<body>
-  <!-- Menu lateral equivalente ao menu existente em clientes.html. -->
-  <aside class="menu-lateral"><div class="marca"><div class="logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiz6hjQ62svFZZKuzyxGbxIxeVa0AbIXk6BHW9EP5j-g&s=10" alt="Logo da empresa"></div><p class="nome-sistema">EMP System</p></div><p class="texto-menu">Menu principal</p><nav class="opcoes-menu" aria-label="Menu principal"><a class="opcao-menu" href="clientes.html">Cadastro de Clientes</a><a class="opcao-menu" href="categorias-produto.html">Cadastro de Categorias de Produto</a><a class="opcao-menu" href="produtos.html">Cadastro de Produtos</a><a class="opcao-menu ativa" href="orcamentos.html">Tela de Orçamentos</a></nav><div class="rodape-menu"><button class="botao-sair" id="botaoSair" type="button">Sign out</button></div></aside>
-  <main class="conteudo"><div class="cabecalho"><div><h1>Orçamentos</h1><p class="subtitulo">Consulte e gerencie os orçamentos cadastrados.</p></div><div class="botoes-topo"><button class="botao botao-excluir" id="botaoExcluirSelecionados" type="button" disabled>Excluir selecionados</button><a class="botao-novo" href="cadastro-orcamento.html">+ Novo orçamento</a></div></div>
-    <!-- Busca pelo clienteid e ordenação pela data de expedição. -->
-    <section class="filtros" aria-label="Filtros de orçamentos"><div class="campo-busca"><input id="campoBusca" type="search" placeholder="Buscar pelo Cliente ID" aria-label="Buscar pelo Cliente ID"></div><select id="seletorOrdem" aria-label="Ordenar por data"><option value="desc">Mais recentes primeiro</option><option value="asc">Mais antigos primeiro</option></select></section>
-    <section class="cartao-tabela" aria-live="polite"><div class="tabela-responsiva"><table><thead><tr><th><input class="checkbox" id="selecionarTodos" type="checkbox" aria-label="Selecionar todos os orçamentos"></th><th>Orçamento ID</th><th>Cliente ID</th><th>Data de expedição</th><th>Validade</th><th>Produtos selecionados</th><th>Valor total</th><th>Ações</th></tr></thead><tbody id="listaOrcamentos"><tr><td class="mensagem" colspan="8">Carregando orçamentos...</td></tr></tbody></table></div></section>
-  </main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="orcamentos.js"></script>
-</body></html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orçamentos | EMP System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --roxo-escuro: #4c1d95;
+        --roxo: #6d28d9;
+        --roxo-claro: #8b5cf6;
+        --roxo-tint: #f5f1fe;
+        --roxo-borda: #dcd1f7;
+        --texto: #2e1a47;
+        --texto-suave: #6b5c82;
+        --branco: #fff;
+        --erro: #d6335a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--roxo-tint);
+        color: var(--texto);
+        font-family: Inter, sans-serif;
+      }
+      .menu-lateral {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        width: 290px;
+        height: 100vh;
+        padding: 28px 18px 22px;
+        background: var(--branco);
+        border-right: 1px solid var(--roxo-borda);
+      }
+      .marca {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 10px 28px;
+        border-bottom: 1px solid var(--roxo-borda);
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+        padding: 5px;
+        border: 1px solid var(--roxo-borda);
+        border-radius: 50%;
+      }
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+      .nome-sistema,
+      h1 {
+        margin: 0;
+        color: var(--roxo-escuro);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 700;
+      }
+      .texto-menu {
+        margin: 26px 10px 10px;
+        color: var(--texto-suave);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      .opcoes-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .opcao-menu {
+        display: block;
+        padding: 13px 14px;
+        border-radius: 10px;
+        color: var(--texto);
+        font-size: 0.9rem;
+        text-decoration: none;
+      }
+      .opcao-menu:hover,
+      .opcao-menu.ativa {
+        background: var(--roxo-tint);
+        color: var(--roxo-escuro);
+      }
+      .rodape-menu {
+        margin-top: auto;
+        padding-top: 20px;
+        border-top: 1px solid var(--roxo-borda);
+      }
+      .botao-sair {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--roxo-borda);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--roxo);
+        font: 600 0.88rem Inter;
+        cursor: pointer;
+      }
+      /* Área principal com os mesmos cartões e botões das demais telas. */
+      .conteudo {
+        min-height: 100vh;
+        margin-left: 290px;
+        /* Reduz as margens laterais para dar mais espaço à tabela. */
+        padding: 32px 22px;
+      }
+      .cabecalho {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+      h1 {
+        margin-bottom: 6px;
+        font-size: 1.8rem;
+      }
+      .subtitulo {
+        margin: 0;
+        color: var(--texto-suave);
+      }
+      .botoes-topo,
+      .acoes {
+        /* Mantém Editar e Excluir lado a lado em duas colunas. */
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 8px;
+      }
+      /* Coloca Imprimir na linha de baixo, ocupando a largura dos dois botões. */
+      .acoes .botao-imprimir {
+        grid-column: 1 / -1;
+      }
+      .botao,
+      .botao-novo {
+        padding: 11px 14px;
+        border: 1px solid var(--roxo-borda);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--roxo);
+        font: 600 0.85rem Inter;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .botao-novo {
+        border-color: var(--roxo);
+        background: var(--roxo);
+        color: #fff;
+      }
+      .botao-excluir {
+        border-color: #f3bdcc;
+        color: var(--erro);
+      }
+      .botao:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .filtros {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .campo-busca {
+        flex: 1 1 280px;
+      }
+      input,
+      select {
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1.5px solid var(--roxo-borda);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--texto);
+        font: inherit;
+        outline: none;
+      }
+      .campo-busca input {
+        width: 100%;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--roxo-claro);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18);
+      }
+      .cartao-tabela {
+        overflow: hidden;
+        border: 1px solid var(--roxo-borda);
+        border-radius: 14px;
+        background: #fff;
+      }
+      .tabela-responsiva {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      /* Distribui as colunas dentro do espaço disponível, sem largura mínima fixa. */
+      .tabela-responsiva table {
+        table-layout: fixed;
+      }
+      .tabela-responsiva th:first-child { width: 34px; }
+      .tabela-responsiva th:nth-child(2),
+      .tabela-responsiva th:nth-child(3) { width: 8%; }
+      .tabela-responsiva th:nth-child(4),
+      .tabela-responsiva th:nth-child(5) { width: 12%; }
+      .tabela-responsiva th:nth-child(7) { width: 13%; }
+      .tabela-responsiva th:last-child { width: 118px; }
+
+      /* Compacta as células e quebra textos longos sem esconder os dados. */
+      .tabela-responsiva th,
+      .tabela-responsiva td {
+        padding: 10px 6px;
+        overflow-wrap: anywhere;
+      }
+      .tabela-responsiva th { font-size: 0.68rem; }
+      .tabela-responsiva td { font-size: 0.8rem; }
+
+      /* Diminui apenas os botões da tabela, mantendo Imprimir na segunda linha. */
+      .tabela-responsiva .acoes { gap: 4px; }
+      .tabela-responsiva .botao { padding: 8px 5px; font-size: 0.72rem; }
+      th,
+      td {
+        padding: 15px 18px;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid var(--roxo-tint);
+      }
+      th {
+        background: #fbfafe;
+        color: var(--texto-suave);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+      td {
+        font-size: 0.88rem;
+      }
+      .checkbox {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--roxo);
+        cursor: pointer;
+      }
+      .itens {
+        /* Permite que a lista de produtos acompanhe a largura da coluna. */
+        margin: 0;
+        padding-left: 12px;
+        line-height: 1.4;
+      }
+      .itens li + li {
+        margin-top: 5px;
+      }
+      .mensagem {
+        padding: 26px;
+        color: var(--texto-suave);
+        text-align: center;
+      }
+      .erro {
+        color: var(--erro);
+      }
+      @media (max-width: 650px) {
+        .menu-lateral {
+          position: static;
+          width: 100%;
+          height: auto;
+        }
+        .rodape-menu {
+          margin-top: 24px;
+        }
+        .conteudo {
+          margin-left: 0;
+          padding: 28px 18px;
+        }
+        .cabecalho {
+          flex-direction: column;
+        }
+        select {
+          width: 100%;
+        }
+      }
+      /* Mantém o modelo de impressão escondido durante o uso normal da tela. */
+      #orcamento-impressao { display: none; }
+
+      /* Na impressão, retira o menu e a listagem e mostra apenas o orçamento. */
+      @media print {
+        @page { size: A4; margin: 15mm; }
+        body { margin: 0; background: white; color: black; }
+        body > :not(#orcamento-impressao) { display: none !important; }
+        #orcamento-impressao {
+          display: block;
+          width: 100%;
+          font: 12px Arial, sans-serif;
+          color: black;
+        }
+
+        /* Organiza o título e permite que textos longos caibam na largura da folha. */
+        #orcamento-impressao h1 { text-align: center; color: black; font: bold 22px Arial, sans-serif; }
+        #orcamento-impressao table { width: 100%; min-width: 0; border-collapse: collapse; table-layout: fixed; margin-top: 20px; }
+        #orcamento-impressao th,
+        #orcamento-impressao td { border: 1px solid black; padding: 8px; color: black; background: white; overflow-wrap: anywhere; }
+
+        /* Repete o cabeçalho em outras páginas e evita dividir uma linha entre folhas. */
+        #orcamento-impressao thead { display: table-header-group; }
+        #orcamento-impressao tr { break-inside: avoid; }
+        #orcamento-impressao .total-impressao { text-align: right; font-size: 16px; break-inside: avoid; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Menu lateral equivalente ao menu existente em clientes.html. -->
+    <aside class="menu-lateral">
+      <div class="marca">
+        <div class="logo">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiz6hjQ62svFZZKuzyxGbxIxeVa0AbIXk6BHW9EP5j-g&s=10"
+            alt="Logo da empresa"
+          />
+        </div>
+        <p class="nome-sistema">EMP System</p>
+      </div>
+      <p class="texto-menu">Menu principal</p>
+      <nav class="opcoes-menu" aria-label="Menu principal">
+        <a class="opcao-menu" href="clientes.html">Cadastro de Clientes</a
+        ><a class="opcao-menu" href="categorias-produto.html"
+          >Cadastro de Categorias de Produto</a
+        ><a class="opcao-menu" href="produtos.html">Cadastro de Produtos</a
+        ><a class="opcao-menu ativa" href="orcamentos.html"
+          >Tela de Orçamentos</a
+        >
+      </nav>
+      <div class="rodape-menu">
+        <button class="botao-sair" id="botaoSair" type="button">
+          Sign out
+        </button>
+      </div>
+    </aside>
+    <main class="conteudo">
+      <div class="cabecalho">
+        <div>
+          <h1>Orçamentos</h1>
+          <p class="subtitulo">
+            Consulte e gerencie os orçamentos cadastrados.
+          </p>
+        </div>
+        <div class="botoes-topo">
+          <button
+            class="botao botao-excluir"
+            id="botaoExcluirSelecionados"
+            type="button"
+            disabled
+          >
+            Excluir selecionados</button
+          ><a class="botao-novo" href="cadastro-orcamento.html"
+            >+ Novo orçamento</a
+          >
+        </div>
+      </div>
+      <!-- Busca pelo clienteid e ordenação pela data de expedição. -->
+      <section class="filtros" aria-label="Filtros de orçamentos">
+        <div class="campo-busca">
+          <input
+            id="campoBusca"
+            type="search"
+            placeholder="Buscar pelo Cliente ID"
+            aria-label="Buscar pelo Cliente ID"
+          />
+        </div>
+        <select id="seletorOrdem" aria-label="Ordenar por data">
+          <option value="desc">Mais recentes primeiro</option>
+          <option value="asc">Mais antigos primeiro</option>
+        </select>
+      </section>
+      <section class="cartao-tabela" aria-live="polite">
+        <div class="tabela-responsiva">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    class="checkbox"
+                    id="selecionarTodos"
+                    type="checkbox"
+                    aria-label="Selecionar todos os orçamentos"
+                  />
+                </th>
+                <th>Orçamento ID</th>
+                <th>Cliente ID</th>
+                <th>Data de expedição</th>
+                <th>Validade</th>
+                <th>Produtos selecionados</th>
+                <th>Valor total</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="listaOrcamentos">
+              <tr>
+                <td class="mensagem" colspan="8">Carregando orçamentos...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <!-- Modelo preenchido com o orçamento escolhido e exibido somente na impressão. -->
+    <section id="orcamento-impressao">
+      <h1>ORÇAMENTO Nº <span id="imp-numero"></span></h1>
+      <p><strong>Cliente ID:</strong> <span id="imp-cliente"></span></p>
+      <p><strong>Data de expedição:</strong> <span id="imp-data"></span></p>
+      <p><strong>Validade:</strong> <span id="imp-validade"></span></p>
+      <!-- Cada item ocupa uma linha, com quantidade, preço e subtotal. -->
+      <table>
+        <thead><tr><th>Produto</th><th>Descrição</th><th>Quantidade</th><th>Valor unitário</th><th>Subtotal</th></tr></thead>
+        <tbody id="imp-itens"></tbody>
+      </table>
+      <p class="total-impressao"><strong>Total do orçamento: <span id="imp-total"></span></strong></p>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="orcamentos.js"></script>
+  </body>
+</html>

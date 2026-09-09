@@ -38,61 +38,94 @@ async function carregarProdutos() {
   produtos = (data || []).filter(function (produto) { return produtoEstaAtivo(produto); });
 }
 
-// Cria uma opção de produto e deixa marcado o produto da edição, quando existir.
-function criarOpcoesProdutos(produtoSelecionado) {
+// Escapa textos do catálogo antes de colocá-los nas opções do formulário.
+function textoSeguro(valor) {
+  const elemento = document.createElement("span");
+  elemento.textContent = valor ?? "";
+  return elemento.innerHTML;
+}
+
+// Oferece produtos ativos para novos itens.
+function criarOpcoesProdutos() {
   let opcoes = '<option value="">Selecione um produto</option>';
-  produtos.forEach(function (produto) { const selecionado = String(produto.produtoid) === String(produtoSelecionado) ? "selected" : ""; opcoes += `<option value="${produto.produtoid}" ${selecionado}>${produto.nome_produto || "Produto sem nome"} (ID ${produto.produtoid})</option>`; });
+  produtos.forEach(function (produto) {
+    opcoes += `<option value="${produto.produtoid}">${textoSeguro(produto.nome_produto || "Produto sem nome")} (ID ${produto.produtoid})</option>`;
+  });
   return opcoes;
 }
 
-// Adiciona uma linha contendo produto, valor unitário, quantidade, subtotal e remoção.
+// Cada linha guarda sua própria foto, independente do catálogo.
 function adicionarItem(item) {
   const linha = document.createElement("tr");
   linha.className = "linha-item";
-  // O campo readonly mostra o preço do produto, mas não permite que ele seja alterado aqui.
-  linha.innerHTML = `<td><select class="produto-item" required>${criarOpcoesProdutos(item?.produtoid)}</select></td><td class="unitario"><input class="valor-unitario" type="text" value="R$ 0,00" readonly aria-label="Valor unitário do produto"></td><td><input class="quantidade-item" type="number" min="1" step="1" value="${item?.qt_produto || 1}" required></td><td class="subtotal">R$ 0,00</td><td><button class="botao botao-remover" type="button">Remover</button></td>`;
-  linha.querySelector(".produto-item").addEventListener("change", function () { atualizarLinha(linha); });
+  linha.innerHTML = `<td><select class="produto-item" required>${criarOpcoesProdutos()}</select></td><td class="unitario"><input class="valor-unitario" type="text" readonly aria-label="Valor unitário do produto"></td><td><input class="quantidade-item" type="number" min="1" step="1" value="1" required></td><td class="subtotal"></td><td><button class="botao botao-remover" type="button">Remover</button></td>`;
+  const seletor = linha.querySelector(".produto-item");
+
+  // A opção histórica funciona mesmo quando o produto foi excluído ou inativado.
+  if (item) {
+    linha.fotoProduto = {
+      produtoid: item.produtoid,
+      nome_produto: item.nome_produto,
+      ds_produto: item.ds_produto,
+      vl_unitario: Number(item.vl_unitario ?? (item.qt_produto > 0 ? item.vl_total / item.qt_produto : 0))
+    };
+    const opcao = document.createElement("option");
+    opcao.value = "historico";
+    opcao.textContent = (item.nome_produto || "Produto do orçamento") + " (salvo no orçamento)";
+    seletor.appendChild(opcao);
+    seletor.value = "historico";
+    linha.querySelector(".quantidade-item").value = item.qt_produto;
+  }
+
+  // Só a escolha de outro produto substitui a foto e utiliza o preço do catálogo.
+  seletor.addEventListener("change", function () {
+    if (seletor.value === "historico") {
+      linha.fotoProduto = { produtoid: item.produtoid, nome_produto: item.nome_produto, ds_produto: item.ds_produto, vl_unitario: Number(item.vl_unitario ?? (item.qt_produto > 0 ? item.vl_total / item.qt_produto : 0)) };
+    } else {
+      const produto = produtos.find(function (produto) { return String(produto.produtoid) === seletor.value; });
+      linha.fotoProduto = produto ? { produtoid: produto.produtoid, nome_produto: produto.nome_produto, ds_produto: produto.ds_produto, vl_unitario: valorUnitario(produto) } : null;
+    }
+    atualizarLinha(linha);
+  });
+  // Alterar a quantidade mantém o preço histórico; remover exclui apenas esta linha.
   linha.querySelector(".quantidade-item").addEventListener("input", function () { atualizarLinha(linha); });
   linha.querySelector(".botao-remover").addEventListener("click", function () { linha.remove(); atualizarTotal(); });
   listaItens.appendChild(linha);
   atualizarLinha(linha);
 }
 
-// Recalcula uma linha com o preço atual do produto multiplicado pela quantidade.
+// Calcula o subtotal usando somente o preço guardado na linha.
 function atualizarLinha(linha) {
-  const produtoId = linha.querySelector(".produto-item").value;
-  const produto = produtos.find(function (item) { return String(item.produtoid) === String(produtoId); });
+  const unitario = linha.fotoProduto ? linha.fotoProduto.vl_unitario : 0;
   const quantidade = Number(linha.querySelector(".quantidade-item").value || 0);
-  const unitario = produto ? valorUnitario(produto) : 0;
-  // Ao escolher o produto, o preço salvo nele aparece automaticamente neste campo.
   linha.querySelector(".valor-unitario").value = formatarMoeda(unitario);
   linha.querySelector(".subtotal").textContent = formatarMoeda(unitario * quantidade);
   atualizarTotal();
 }
 
-// Soma os subtotais de todas as linhas e mostra o valor total do orçamento.
+// Soma os valores das fotos, sem consultar o preço atual do catálogo.
 function atualizarTotal() {
   let total = 0;
   document.querySelectorAll(".linha-item").forEach(function (linha) {
-    const produto = produtos.find(function (item) { return String(item.produtoid) === String(linha.querySelector(".produto-item").value); });
-    total += valorUnitario(produto || {}) * Number(linha.querySelector(".quantidade-item").value || 0);
+    const unitario = linha.fotoProduto ? linha.fotoProduto.vl_unitario : 0;
+    total += unitario * Number(linha.querySelector(".quantidade-item").value || 0);
   });
   valorTotal.textContent = formatarMoeda(total);
   return total;
 }
 
-// Lê as linhas e monta os dados que serão inseridos na tabela orcamento_item.
+// Envia nome, descrição e preço para orcamento_item, inclusive dos produtos excluídos.
 function obterItensFormulario() {
   const itens = [];
   document.querySelectorAll(".linha-item").forEach(function (linha) {
-    const produtoid = linha.querySelector(".produto-item").value;
-    const qt_produto = Number(linha.querySelector(".quantidade-item").value);
-    const produto = produtos.find(function (item) { return String(item.produtoid) === String(produtoid); });
-    if (produtoid && qt_produto > 0 && produto) itens.push({ produtoid: produtoid, qt_produto: qt_produto, vl_total: valorUnitario(produto) * qt_produto });
+    const foto = linha.fotoProduto;
+    const quantidade = Number(linha.querySelector(".quantidade-item").value);
+    if (foto && quantidade > 0) {
+      itens.push({ produtoid: foto.produtoid, nome_produto: foto.nome_produto, ds_produto: foto.ds_produto, vl_unitario: foto.vl_unitario, qt_produto: quantidade, vl_total: foto.vl_unitario * quantidade });
+    }
   });
   return itens;
 }
-
 // Limpa o formulário para iniciar um novo cadastro.
 function limparFormulario() {
   formulario.reset();

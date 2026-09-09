@@ -42,8 +42,12 @@ function mostrarClientes(lista) {
     const linha = document.createElement("tr");
     linha.innerHTML = `
       <td>${pegarNome(cliente)}</td>
-      <td>${cliente.tipo_cliente || "Não informado"}</td>
-      <td>${mascararCPF(cliente.cpf_cnpj_cliente) || "Não informado"}</td>
+      <td>${cliente.tipo_cliente === "F"
+      ? "Físico"
+      : cliente.tipo_cliente === "J"
+      ? "Jurídico": "Não informado"}</td>
+      
+      <td>${mascararDocumento(cliente.cpf_cnpj_cliente, cliente.tipo_cliente) || "Não informado"}</td>
       <td>${formatarData(pegarDataCadastro(cliente))}</td>
       <td><div class="acoes">
         <button class="botao-acao" type="button">Editar</button>
@@ -152,6 +156,19 @@ async function excluirCliente(clienteid, nome) {
   }
 
   carregarClientes();
+}
+
+// Escolhe a máscara pelo tipo de cliente e trata documentos não preenchidos.
+function mascararDocumento(documento, tipo) {
+  if (!documento) return "";
+  if (tipo === "J") return mascararCNPJ(String(documento));
+  return mascararCPF(String(documento));
+}
+
+// Oculta parte do CNPJ, mantendo os separadores e os dois primeiros e últimos dígitos.
+function mascararCNPJ(cnpj) {
+  const numeros = cnpj.replace(/\D/g, "");
+  return `${numeros.slice(0, 2)}.***.***/****-${numeros.slice(12, 14)}`;
 }
 
 // MASCARA DO CPF

@@ -337,7 +337,12 @@
     </div>
     <!-- Estes campos permitem pesquisar e filtrar a lista. -->
     <section class="filtros">
-      <div class="campo-busca"><input id="campoBusca" type="search" placeholder="Pesquisar por nome ou observação"></div>
+      <!-- A busca aceita o código, o nome ou a descrição do produto. -->
+      <div class="campo-busca"><input id="campoBusca" type="search" placeholder="Pesquisar por ID, nome ou descrição" aria-label="Pesquisar por ID, nome ou descrição"></div>
+      <!-- As categorias cadastradas são adicionadas pelo JavaScript. -->
+      <select id="filtroCategoria" aria-label="Filtrar por categoria">
+        <option value="">Todas as categorias</option>
+      </select>
       <select id="filtroStatus">
         <option value="todos">Todos os status</option>
         <option value="ativo">Ativos</option>
@@ -345,8 +350,8 @@
       </select><select id="seletorOrdem">
         <option value="data-desc">Mais recentes primeiro</option>
         <option value="data-asc">Mais antigos primeiro</option>
-        <option value="valor-desc">Mais caro primeiro</option>
-        <option value="valor-asc">Mais barato primeiro</option>
+        <option value="valor-desc">Mais caros primeiro</option>
+        <option value="valor-asc">Mais baratos primeiro</option>
       </select>
     </section>
     <section class="cartao-tabela">
