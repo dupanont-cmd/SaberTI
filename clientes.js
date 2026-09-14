@@ -105,7 +105,7 @@ async function excluirCliente(clienteid, nome) {
   );
   if (!confirmou) return;
 
-  // 1. Buscar todos os orcamentoid vinculados a esse cliente
+  // Verifica se o cliente está vinculado a algum orçamento antes de excluir.
   const { data: orcamentos, error: erroBusca } = await supabaseClient
     .from("orcamento")
     .select("orcamentoid")
@@ -118,33 +118,13 @@ async function excluirCliente(clienteid, nome) {
     return;
   }
 
-  // 2. Apagar de orcamento_item cada linha ligada a esses orcamentoid
+  // Impede a exclusão do cliente e preserva seus orçamentos e itens.
   if (orcamentos.length > 0) {
-    const idsOrcamentos = orcamentos.map((o) => o.orcamentoid);
-    const { error: erroItem } = await supabaseClient
-      .from("orcamento_item")
-      .delete()
-      .in("orcamentoid", idsOrcamentos);
-
-    if (erroItem) {
-      alert(
-        "Não foi possível excluir os itens do orçamento: " + erroItem.message,
-      );
-      return;
-    }
-  }
-  // 3. Apagar de orcamento
-  const { error: erroOrcamento } = await supabaseClient
-    .from("orcamento")
-    .delete()
-    .eq("clienteid", clienteid);
-
-  if (erroOrcamento) {
-    alert("Não foi possível excluir o orçamento: " + erroOrcamento.message);
+    alert("Não é possível excluir este cliente porque ele está vinculado a um orçamento.");
     return;
   }
 
-  // 4. Apagar o cliente
+  // Exclui somente o cliente que não possui orçamentos vinculados.
   const { error: erroCliente } = await supabaseClient
     .from("cliente")
     .delete()

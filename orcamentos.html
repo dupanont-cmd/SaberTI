@@ -211,13 +211,23 @@
       .tabela-responsiva table {
         table-layout: fixed;
       }
-      .tabela-responsiva th:first-child { width: 34px; }
+      .tabela-responsiva th:first-child {
+        width: 34px;
+      }
       .tabela-responsiva th:nth-child(2),
-      .tabela-responsiva th:nth-child(3) { width: 8%; }
+      .tabela-responsiva th:nth-child(3) {
+        width: 8%;
+      }
       .tabela-responsiva th:nth-child(4),
-      .tabela-responsiva th:nth-child(5) { width: 12%; }
-      .tabela-responsiva th:nth-child(7) { width: 13%; }
-      .tabela-responsiva th:last-child { width: 118px; }
+      .tabela-responsiva th:nth-child(5) {
+        width: 12%;
+      }
+      .tabela-responsiva th:nth-child(7) {
+        width: 13%;
+      }
+      .tabela-responsiva th:last-child {
+        width: 118px;
+      }
 
       /* Compacta as células e quebra textos longos sem esconder os dados. */
       .tabela-responsiva th,
@@ -225,12 +235,21 @@
         padding: 10px 6px;
         overflow-wrap: anywhere;
       }
-      .tabela-responsiva th { font-size: 0.68rem; }
-      .tabela-responsiva td { font-size: 0.8rem; }
+      .tabela-responsiva th {
+        font-size: 0.68rem;
+      }
+      .tabela-responsiva td {
+        font-size: 0.8rem;
+      }
 
       /* Diminui apenas os botões da tabela, mantendo Imprimir na segunda linha. */
-      .tabela-responsiva .acoes { gap: 4px; }
-      .tabela-responsiva .botao { padding: 8px 5px; font-size: 0.72rem; }
+      .tabela-responsiva .acoes {
+        gap: 4px;
+      }
+      .tabela-responsiva .botao {
+        padding: 8px 5px;
+        font-size: 0.72rem;
+      }
       th,
       td {
         padding: 15px 18px;
@@ -291,30 +310,69 @@
         }
       }
       /* Mantém o modelo de impressão escondido durante o uso normal da tela. */
-      #orcamento-impressao { display: none; }
+      #orcamento-impressao {
+        display: none;
+      }
 
       /* Na impressão, retira o menu e a listagem e mostra apenas o orçamento. */
       @media print {
-        @page { size: A4; margin: 15mm; }
-        body { margin: 0; background: white; color: black; }
-        body > :not(#orcamento-impressao) { display: none !important; }
+        @page {
+          size: A4;
+          margin: 15mm;
+        }
+        body {
+          margin: 0;
+          background: white;
+          color: black;
+        }
+        body > :not(#orcamento-impressao) {
+          display: none !important;
+        }
         #orcamento-impressao {
           display: block;
           width: 100%;
-          font: 12px Arial, sans-serif;
+          font:
+            12px Arial,
+            sans-serif;
           color: black;
         }
 
         /* Organiza o título e permite que textos longos caibam na largura da folha. */
-        #orcamento-impressao h1 { text-align: center; color: black; font: bold 22px Arial, sans-serif; }
-        #orcamento-impressao table { width: 100%; min-width: 0; border-collapse: collapse; table-layout: fixed; margin-top: 20px; }
+        #orcamento-impressao h1 {
+          text-align: center;
+          color: black;
+          font:
+            bold 22px Arial,
+            sans-serif;
+        }
+        #orcamento-impressao table {
+          width: 100%;
+          min-width: 0;
+          border-collapse: collapse;
+          table-layout: fixed;
+          margin-top: 20px;
+        }
         #orcamento-impressao th,
-        #orcamento-impressao td { border: 1px solid black; padding: 8px; color: black; background: white; overflow-wrap: anywhere; }
+        #orcamento-impressao td {
+          border: 1px solid black;
+          padding: 8px;
+          color: black;
+          background: white;
+          overflow-wrap: anywhere;
+        }
 
         /* Repete o cabeçalho em outras páginas e evita dividir uma linha entre folhas. */
-        #orcamento-impressao thead { display: table-header-group; }
-        #orcamento-impressao tr { break-inside: avoid; }
-        #orcamento-impressao .total-impressao { text-align: right; font-size: 16px; break-inside: avoid; }
+        #orcamento-impressao thead {
+          display: table-header-group;
+        }
+        #orcamento-impressao tr {
+          break-inside: avoid;
+        }
+        #orcamento-impressao .total-impressao {
+          text-align: right;
+          font-size: 16px;
+          break-inside: avoid;
+        }
       }
     </style>
   </head>
@@ -367,14 +425,14 @@
           >
         </div>
       </div>
-      <!-- Busca pelo clienteid e ordenação pela data de expedição. -->
+      <!-- Busca pelo nome do cliente ou ID do orçamento e ordenação pela data. -->
       <section class="filtros" aria-label="Filtros de orçamentos">
         <div class="campo-busca">
           <input
             id="campoBusca"
             type="search"
-            placeholder="Buscar pelo Cliente ID"
-            aria-label="Buscar pelo Cliente ID"
+            placeholder="Buscar por nome do cliente ou ID do orçamento"
+            aria-label="Buscar por nome do cliente ou ID do orçamento"
           />
         </div>
         <select id="seletorOrdem" aria-label="Ordenar por data">
@@ -396,7 +454,7 @@
                   />
                 </th>
                 <th>Orçamento ID</th>
-                <th>Cliente ID</th>
+                <th>Nome do cliente</th>
                 <th>Data de expedição</th>
                 <th>Validade</th>
                 <th>Produtos selecionados</th>
@@ -421,10 +479,20 @@
       <p><strong>Validade:</strong> <span id="imp-validade"></span></p>
       <!-- Cada item ocupa uma linha, com quantidade, preço e subtotal. -->
       <table>
-        <thead><tr><th>Produto</th><th>Descrição</th><th>Quantidade</th><th>Valor unitário</th><th>Subtotal</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Descrição</th>
+            <th>Quantidade</th>
+            <th>Valor unitário</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
         <tbody id="imp-itens"></tbody>
       </table>
-      <p class="total-impressao"><strong>Total do orçamento: <span id="imp-total"></span></strong></p>
+      <p class="total-impressao">
+        <strong>Total do orçamento: <span id="imp-total"></span></strong>
+      </p>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="orcamentos.js"></script>

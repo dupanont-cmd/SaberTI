@@ -109,18 +109,27 @@ async function excluirCategorias(ids) {
     )
   )
     return;
-  const { error } = await supabaseClient
-    .from("orcamento_item")
-    .delete()
-    .in("produtoid", ids);
-    
-    
-    await supabaseClient
+  // Verifica se alguma categoria selecionada está ligada a um produto.
+  const { data: vinculos, error: erroBusca } = await supabaseClient
     .from("produto")
-    .delete()
-    .in("categoriaprodutoid", ids);
+    .select("produtoid")
+    .in("categoriaprodutoid", ids)
+    .limit(1);
 
-  await supabaseClient
+  // Interrompe a exclusão se não for possível consultar os vínculos.
+  if (erroBusca) {
+    alert("Não foi possível verificar os vínculos das categorias: " + erroBusca.message);
+    return;
+  }
+
+  // Preserva todas as categorias selecionadas quando alguma possui produtos.
+  if (vinculos.length > 0) {
+    alert("Não é possível excluir: uma ou mais categorias selecionadas estão vinculadas a um produto. Nenhuma categoria foi excluída.");
+    return;
+  }
+
+  // Exclui apenas as categorias sem produtos, verificando o resultado da exclusão.
+  const { error } = await supabaseClient
     .from("categoria_produto")
     .delete()
     .in("categoriaprodutoid", ids);

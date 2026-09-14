@@ -15,6 +15,14 @@ let orcamentos = [],
   itensPorOrcamento = {},
   idsSelecionados = [];
 
+// Guarda os nomes dos clientes pelo ID para usar na tabela e na pesquisa.
+let nomesClientes = {};
+
+// Retorna uma descrição quando o cliente não está mais disponível.
+function nomeClienteOrcamento(orcamento) {
+  return nomesClientes[orcamento.clienteid] || "Cliente não encontrado";
+}
+
 // Formata valores recebidos do Supabase antes de os colocar no HTML.
 function textoSeguro(valor) {
   const elemento = document.createElement("span");
@@ -42,6 +50,14 @@ function valorUnitario(produto) {
 
 // Carrega e agrupa os dados necessários para uma lista completa de orçamentos.
 async function carregarDadosRelacionados() {
+  // Carrega os clientes e associa cada nome ao seu ID.
+  const respostaClientes = await supabaseClient.from("cliente").select("*");
+  if (respostaClientes.error) throw respostaClientes.error;
+  nomesClientes = {};
+  (respostaClientes.data || []).forEach(function (cliente) {
+    nomesClientes[cliente.clienteid] = cliente.nome || cliente.nome_cliente || cliente.name || "Cliente sem nome";
+  });
+
   // Os detalhes vêm da foto salva; a listagem não depende mais do catálogo.
   const { data, error } = await supabaseClient
     .from("orcamento_item")
@@ -82,7 +98,8 @@ function mostrarOrcamentos(lista) {
           .join("")
       : "<li>Nenhum item cadastrado.</li>";
     const linha = document.createElement("tr");
-    linha.innerHTML = `<td><input class="checkbox selecionar-orcamento" type="checkbox" value="${textoSeguro(id)}" ${idsSelecionados.includes(String(id)) ? "checked" : ""}></td><td>${textoSeguro(id)}</td><td>${textoSeguro(orcamento.clienteid)}</td><td>${formatarData(orcamento.dt_orcamento)}</td><td>${formatarData(orcamento.dt_validade_orcamento)}</td><td><ul class="itens">${detalhes}</ul></td><td>${formatarMoeda(orcamento.vl_total_orcamento)}</td><td><div class="acoes"><button class="botao editar" type="button">Editar</button><button class="botao botao-excluir excluir" type="button">Excluir</button></div></td>`;
+    // Exibe o nome do cliente, protegendo o texto antes de colocá-lo na tabela.
+    linha.innerHTML = `<td><input class="checkbox selecionar-orcamento" type="checkbox" value="${textoSeguro(id)}" ${idsSelecionados.includes(String(id)) ? "checked" : ""}></td><td>${textoSeguro(id)}</td><td>${textoSeguro(nomeClienteOrcamento(orcamento))}</td><td>${formatarData(orcamento.dt_orcamento)}</td><td>${formatarData(orcamento.dt_validade_orcamento)}</td><td><ul class="itens">${detalhes}</ul></td><td>${formatarMoeda(orcamento.vl_total_orcamento)}</td><td><div class="acoes"><button class="botao editar" type="button">Editar</button><button class="botao botao-excluir excluir" type="button">Excluir</button></div></td>`;
     linha
       .querySelector(".selecionar-orcamento")
       .addEventListener("change", atualizarSelecionados);
@@ -164,20 +181,21 @@ async function carregarOrcamentos() {
   try {
     await carregarDadosRelacionados();
   } catch (erro) {
-    listaOrcamentos.innerHTML = `<tr><td class="mensagem erro" colspan="8">Não foi possível carregar os itens ou produtos: ${textoSeguro(erro.message)}</td></tr>`;
+    listaOrcamentos.innerHTML = `<tr><td class="mensagem erro" colspan="8">Não foi possível carregar os itens ou clientes: ${textoSeguro(erro.message)}</td></tr>`;
     return;
   }
   orcamentos = respostaOrcamentos.data || [];
   filtrarOrcamentos();
 }
 
-// Busca somente no clienteid e ordena pela data de expedição escolhida.
+// Busca pelo nome do cliente ou ID do orçamento e ordena pela data escolhida.
 function filtrarOrcamentos() {
   const busca = campoBusca.value.trim().toLowerCase();
+  // Compara o nome e o ID do orçamento sem diferenciar maiúsculas e minúsculas.
   const resultado = orcamentos.filter(function (orcamento) {
-    return String(orcamento.clienteid ?? "")
-      .toLowerCase()
-      .includes(busca);
+    const nomeCliente = nomeClienteOrcamento(orcamento).toLowerCase();
+    const orcamentoId = String(orcamento.orcamentoid ?? "").toLowerCase();
+    return nomeCliente.includes(busca) || orcamentoId.includes(busca);
   });
   resultado.sort(function (a, b) {
     const dataA = new Date(a.dt_orcamento || 0).getTime(),

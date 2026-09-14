@@ -177,7 +177,26 @@ async function excluirProdutos(ids) {
     )
   )
     return;
-  // O banco remove somente o vínculo com o catálogo e mantém a foto dos itens.
+  // Consulta os itens de orçamento ligados aos produtos selecionados.
+  const { data: vinculos, error: erroBusca } = await supabaseClient
+    .from("orcamento_item")
+    .select("produtoid")
+    .in("produtoid", ids)
+    .limit(1);
+
+  // Se a consulta falhar, não exclui nenhum produto.
+  if (erroBusca) {
+    alert("Não foi possível verificar os vínculos dos produtos: " + erroBusca.message);
+    return;
+  }
+
+  // Bloqueia toda a exclusão se algum produto estiver em um orçamento.
+  if (vinculos.length > 0) {
+    alert("Não é possível excluir: um ou mais produtos selecionados estão vinculados a um orçamento. Nenhum produto foi excluído.");
+    return;
+  }
+
+  // Exclui somente os produtos sem vínculo com orçamentos.
   const { error } = await supabaseClient
     .from("produto")
     .delete()
